@@ -1,6 +1,6 @@
 -- [[ 🌚刘某某脚本🌝 | 蓝色按钮动画增强 + 搜索插队 ]]
 
--- 1. 运行你的 100% 正确版本
+-- 1. 运行你的 Core.lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Main.lua"))()
 
 local _CG = game:GetService("CoreGui")
