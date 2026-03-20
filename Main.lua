@@ -1,7 +1,8 @@
 -- [[ 🌚刘某某脚本🌝 | UI 增强注入终极版 ]]
 
 -- 1. 先运行核心功能 (Core.lua)
-task.spawn(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Core.lua?t=" .. math.random(1, 999)))()
+
     loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Core.lua?t=" .. math.random(1, 999)))()
 end)
 
