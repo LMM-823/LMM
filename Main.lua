@@ -1,7 +1,7 @@
 -- [[ 🌚刘某某脚本🌝 | 蓝色按钮动画增强 + 搜索插队 ]]
 
--- 1. 运行你的 Core.lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Main.lua"))()
+-- 1. 运行你的 Core.lua (已修复死循环，并加入强制刷新)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Core.lua?t=" .. math.random(1, 999)))()
 
 local _CG = game:GetService("CoreGui")
 local TweenService = game:GetService("TweenService")
