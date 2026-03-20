@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 | 核心功能文件 | Core.lua ]]
+-- [[ 🌚刘某某脚本🌝 | 纯净框架版 | Core.lua ]]
 
 local LMM_V4 = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
@@ -24,7 +24,7 @@ MainFrame.Draggable = true
 UICorner.Parent = MainFrame
 UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
-UIStroke.Color = Color3.fromRGB(255, 0, 255)
+UIStroke.Color = Color3.fromRGB(255, 0, 255) -- 紫色边框
 
 Title.Name = "Title"
 Title.Parent = MainFrame
@@ -34,57 +34,33 @@ Title.Font = Enum.Font.GothamBold
 Title.Text = "🌚刘某某脚本🌝"
 Title.TextColor3 = Color3.new(1, 1, 1)
 Title.TextSize = 20
+-- 注意：这里没有添加最小化(-)和关闭(X)按钮，彻底移除
 
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
-ScrollingFrame.Size = UDim2.new(1, -20, 1, -60)
+ScrollingFrame.Size = UDim2.new(1, -20, 1, -280) -- 缩小高度，保持简洁
 ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 500)
-ScrollingFrame.ScrollBarThickness = 2
+ScrollingFrame.ScrollBarThickness = 0 -- 隐藏滚动条更美观
 
 UIListLayout.Parent = ScrollingFrame
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder -- 强制按顺序排列
 
--- 通用按钮创建函数
-local function CreateButton(name, callback)
-    local Button = Instance.new("TextButton")
-    Button.Name = name
-    Button.Parent = ScrollingFrame
-    Button.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Button.Size = UDim2.new(0.9, 0, 0, 50)
-    Button.Font = Enum.Font.GothamBold
-    Button.Text = name
-    Button.TextColor3 = Color3.fromRGB(255, 100, 200)
-    Button.TextSize = 18
-    Instance.new("UICorner", Button)
-    Button.MouseButton1Click:Connect(callback)
-    return Button
-end
-
--- 1. JOIN DISCORD (蓝色按钮)
-local DiscordBtn = CreateButton("JOIN DISCORD", function()
-    setclipboard("https://discord.gg/yourlink")
-end)
+-- 唯一的 DC 按钮 (排在第二位)
+local DiscordBtn = Instance.new("TextButton")
+DiscordBtn.Name = "JOIN DISCORD"
+DiscordBtn.Parent = ScrollingFrame
+DiscordBtn.LayoutOrder = 2 -- 锁死在第二位
 DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200)
+DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50)
+DiscordBtn.Font = Enum.Font.GothamBold
+DiscordBtn.Text = "JOIN DISCORD"
 DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
+DiscordBtn.TextSize = 18
+Instance.new("UICorner", DiscordBtn)
 
--- 2. Owl Hub (核心功能)
-CreateButton("Owl Hub (极简稳定版)", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt"))()
-end)
-
--- 3. 自动连点器 (刘某某)
-CreateButton("自动连点器 (刘某某)", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/AC.lua"))()
-end)
-
--- 4. ESP 透视
-CreateButton("开启 ESP 透视", function()
-    for _, v in pairs(game.Players:GetPlayers()) do
-        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Highlight") == nil then
-            local highlight = Instance.new("Highlight", v.Character)
-            highlight.FillColor = Color3.new(1, 0, 0)
-        end
-    end
+DiscordBtn.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/yourlink")
 end)
