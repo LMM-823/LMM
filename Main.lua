@@ -1,6 +1,6 @@
--- [[ 🌚刘某某脚本🌝 | 蓝色按钮动画增强 + 搜索插队 ]]
+-- [[ 🌚刘某某脚本🌝 | 搜索框 + 按钮动画 + 核心加载 终极版 ]]
 
--- 1. 运行你的核心功能文件 (已修复死循环，并加入强制刷新)
+-- 1. 加载核心功能 (指向 Core.lua，加入随机数防止缓存)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Core.lua?t=" .. math.random(1, 999)))()
 
 local _CG = game:GetService("CoreGui")
@@ -29,29 +29,67 @@ local function CreateConfirmUI(oldSignals)
     _No.MouseButton1Click:Connect(function() _S:Destroy() end)
 end
 
--- 3. 动画与插队逻辑
+-- 3. 增强逻辑 (搜索栏 + 动画)
 task.spawn(function()
     local scrollFrame = nil
-    local targetBtn = nil -- 动态寻找第一个功能按钮
     local discordBtn = nil
     local scriptButtons = {}
-    local comingSoonButtons = {}
 
-    -- 🔍 持续寻找目标按钮 (Owl Hub, Aimbot, 或连点器)
-    while not targetBtn do
+    -- 🔍 扫描 UI 元素
+    while not scrollFrame do
         for _, v in pairs(_CG:GetDescendants()) do
-            if v:IsA("TextButton") then
-                local t = v.Text:upper()
-                if t:find("HUB") or t:find("AIMBOT") or t:find("连点器") then 
-                    targetBtn = v; scrollFrame = v.Parent 
-                end
-                if t:find("DISCORD") or t:find("JOIN") then discordBtn = v end
-            end
+            if v:IsA("ScrollingFrame") then scrollFrame = v end
+            if v:IsA("TextButton") and (v.Text:upper():find("DISCORD") or v.Text:upper():find("JOIN")) then discordBtn = v end
         end
         task.wait(0.5)
     end
 
-    -- 给蓝色 Discord 按钮添加动画效果
+    -- 🛠️ 插入真正的搜索条 (样式修复版)
+    if scrollFrame and not scrollFrame:FindFirstChild("LMM_SearchBar") then
+        local _SB = Instance.new("TextBox", scrollFrame)
+        _SB.Name = "LMM_SearchBar"
+        _SB.LayoutOrder = -10000 -- 确保它排在最上面
+        _SB.Size = UDim2.new(0.9, 0, 0, 45)
+        _SB.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        _SB.PlaceholderText = "🔍 搜索功能..."
+        _SB.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+        _SB.Text = ""
+        _SB.TextColor3 = Color3.new(1, 1, 1)
+        _SB.TextSize = 16
+        _SB.Font = "GothamBold"
+        _SB.ClearTextOnFocus = false
+        
+        local _Stroke = Instance.new("UIStroke", _SB)
+        _Stroke.Thickness = 2
+        _Stroke.Color = Color3.fromRGB(255, 0, 255) -- 适配紫色边框
+        Instance.new("UICorner", _SB).CornerRadius = UDim.new(0, 8)
+
+        -- 绑定所有功能按钮
+        for _, btn in pairs(scrollFrame:GetChildren()) do
+            if btn:IsA("TextButton") and btn ~= _SB and btn ~= discordBtn then
+                table.insert(scriptButtons, btn)
+                -- 拦截点击逻辑，加入二次确认
+                local conns = getconnections(btn.MouseButton1Click)
+                if #conns > 0 then
+                    local saved = {}
+                    for _, c in pairs(conns) do table.insert(saved, {Function = c.Function}); c:Disable() end
+                    btn.MouseButton1Click:Connect(function() CreateConfirmUI(saved) end)
+                end
+            end
+        end
+
+        -- 搜索逻辑
+        _SB:GetPropertyChangedSignal("Text"):Connect(function()
+            local s = _SB.Text:lower()
+            for _, b in pairs(scriptButtons) do
+                if s == "" then b.Visible = true else
+                    b.Visible = b.Text:lower():find(s) ~= nil
+                end
+            end
+        end)
+    end
+
+    -- 蓝色按钮动画效果
     if discordBtn then
         discordBtn.MouseEnter:Connect(function()
             TweenService:Create(discordBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(88, 101, 242)}):Play()
@@ -61,49 +99,5 @@ task.spawn(function()
             TweenService:Create(discordBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(60, 80, 200)}):Play()
             TweenService:Create(discordBtn, TweenInfo.new(0.2), {Size = UDim2.new(0.9, 0, 0, 50)}):Play()
         end)
-        discordBtn.MouseButton1Down:Connect(function()
-            discordBtn:TweenSize(UDim2.new(0.85, 0, 0, 45), "Out", "Quad", 0.1, true)
-        end)
-        discordBtn.MouseButton1Up:Connect(function()
-            discordBtn:TweenSize(UDim2.new(0.95, 0, 0, 55), "Out", "Quad", 0.1, true)
-        end)
     end
-
-    -- 扫描其他按钮并拦截
-    for _, btn in pairs(scrollFrame:GetChildren()) do
-        if btn:IsA("TextButton") then
-            local txt = btn.Text:upper()
-            local isScript = txt:find("AIMBOT") or txt:find("RIVALS") or txt:find("INFINITE") or txt:find("ADMIN") or txt:find("HUB") or txt:find("连点器")
-            if isScript then
-                table.insert(scriptButtons, btn)
-                local conns = getconnections(btn.MouseButton1Click)
-                if #conns > 0 then
-                    local saved = {}
-                    for _, c in pairs(conns) do table.insert(saved, {Function = c.Function}); c:Disable() end
-                    btn.MouseButton1Click:Connect(function() CreateConfirmUI(saved) end)
-                end
-            elseif txt:find("推出") or txt:find("退出") or txt:find("等待") then
-                table.insert(comingSoonButtons, btn)
-            end
-        end
-    end
-
-    -- 在功能按钮上方插入搜索框
-    local _SB = Instance.new("TextBox", scrollFrame)
-    _SB.LayoutOrder = targetBtn.LayoutOrder - 1
-    _SB.Size = UDim2.new(0.9, 0, 0, 75); _SB.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    _SB.PlaceholderText = "🔍 查找脚本..."; _SB.TextSize = 24; _SB.TextColor3 = Color3.new(1, 1, 1); _SB.Font = "GothamBold"
-    Instance.new("UICorner", _SB)
-    local _Stroke = Instance.new("UIStroke", _SB); _Stroke.Thickness = 3; _Stroke.Color = Color3.fromRGB(0, 180, 255)
-
-    _SB:GetPropertyChangedSignal("Text"):Connect(function()
-        local s = _SB.Text:lower()
-        if s == "" then
-            for _, b in pairs(scriptButtons) do b.Visible = true end
-            for _, b in pairs(comingSoonButtons) do b.Visible = true end
-        else
-            for _, b in pairs(scriptButtons) do b.Visible = b.Text:lower():find(s) ~= nil end
-            for _, b in pairs(comingSoonButtons) do b.Visible = false end
-        end
-    end)
 end)
