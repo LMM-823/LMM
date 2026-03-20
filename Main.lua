@@ -1,62 +1,107 @@
--- [[ 🌚刘某某脚本🌝 | 搜索框 + 按钮动画 增强版 ]]
+-- [[ 🌚刘某某脚本🌝 | 蓝色按钮动画增强 + 搜索插队 ]]
 
--- 1. 运行你的核心脚本 (保持你原本的黑色 UI 不变)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Core.lua?t=" .. math.random(1, 999)))()
+-- 1. 运行你的 100% 正确版本
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Main.lua"))()
 
 local _CG = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
 
--- 2. 注入逻辑：把搜索框“贴”到你原本的 UI 上
+-- 2. 确认弹窗函数 (保持原样)
+local function CreateConfirmUI(oldSignals)
+    if _CG:FindFirstChild("LMM_Confirm") then _CG.LMM_Confirm:Destroy() end
+    local _S = Instance.new("ScreenGui", _CG); _S.Name = "LMM_Confirm"; _S.DisplayOrder = 999
+    local _F = Instance.new("Frame", _S)
+    _F.Size = UDim2.new(0, 300, 0, 140); _F.Position = UDim2.new(0.5, -150, 0.5, -70)
+    _F.BackgroundColor3 = Color3.fromRGB(15, 15, 15); _F.Active = true; _F.Draggable = true
+    Instance.new("UICorner", _F)
+    local _Stroke = Instance.new("UIStroke", _F); _Stroke.Thickness = 3; _Stroke.ApplyStrokeMode = "Border"
+    task.spawn(function()
+        local c = 0
+        while _F.Parent do c = (c + 0.005) % 1; _Stroke.Color = Color3.fromHSV(c, 0.7, 1); task.wait(0.05) end
+    end)
+    local _T = Instance.new("TextLabel", _F)
+    _T.Size = UDim2.new(1, 0, 0, 60); _T.Text = "确定要加载吗？"; _T.Font = "GothamBold"; _T.TextSize = 20; _T.TextColor3 = Color3.new(1, 1, 1); _T.BackgroundTransparency = 1
+    local _Yes = Instance.new("TextButton", _F)
+    _Yes.Size = UDim2.new(0, 110, 0, 40); _Yes.Position = UDim2.new(0.1, 0, 0.6, 0); _Yes.BackgroundColor3 = Color3.fromRGB(0, 180, 80); _Yes.Text = "确定"; _Yes.TextColor3 = Color3.new(1, 1, 1); _Yes.Font = "GothamBold"; Instance.new("UICorner", _Yes)
+    _Yes.MouseButton1Click:Connect(function() _S:Destroy(); for _, sig in pairs(oldSignals) do sig.Function() end end)
+    local _No = Instance.new("TextButton", _F)
+    _No.Size = UDim2.new(0, 110, 0, 40); _No.Position = UDim2.new(0.55, 0, 0.6, 0); _No.BackgroundColor3 = Color3.fromRGB(180, 0, 0); _No.Text = "不要"; _No.TextColor3 = Color3.new(1, 1, 1); _No.Font = "GothamBold"; Instance.new("UICorner", _No)
+    _No.MouseButton1Click:Connect(function() _S:Destroy() end)
+end
+
+-- 3. 动画与插队逻辑
 task.spawn(function()
     local scrollFrame = nil
-    local firstBtn = nil
-    local allButtons = {}
+    local aimbotBtn = nil
+    local discordBtn = nil
+    local scriptButtons = {}
+    local comingSoonButtons = {}
 
-    -- 🔍 持续寻找你原本 UI 里的滚动区域和按钮
-    while not scrollFrame do
+    -- 🔍 持续寻找目标
+    while not aimbotBtn do
         for _, v in pairs(_CG:GetDescendants()) do
-            if v:IsA("TextButton") and (v.Text:find("Hub") or v.Text:find("连点器")) then
-                firstBtn = v
-                scrollFrame = v.Parent -- 找到存放按钮的那个框
-                break
+            if v:IsA("TextButton") then
+                local t = v.Text:upper()
+                if t:find("AIMBOT") then aimbotBtn = v; scrollFrame = v.Parent end
+                if t:find("DISCORD") or t:find("JOIN") then discordBtn = v end
             end
         end
         task.wait(0.5)
     end
 
-    -- 🛠️ 插入搜索框 (外观适配你原本的黑色风格)
-    if scrollFrame and not scrollFrame:FindFirstChild("LMM_Search") then
-        local _SB = Instance.new("TextBox", scrollFrame)
-        _SB.Name = "LMM_Search"
-        _SB.LayoutOrder = -9999 -- 强制插队到最上面
-        _SB.Size = UDim2.new(0.9, 0, 0, 50)
-        _SB.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- 适配你的黑色主题
-        _SB.PlaceholderText = "🔍 搜索功能..."
-        _SB.TextSize = 18
-        _SB.TextColor3 = Color3.new(1, 1, 1)
-        _SB.Font = "GothamBold"
-        Instance.new("UICorner", _SB)
-        
-        local _Stroke = Instance.new("UIStroke", _SB)
-        _Stroke.Thickness = 2
-        _Stroke.Color = Color3.fromRGB(50, 50, 50)
-
-        -- 扫描现有按钮
-        for _, btn in pairs(scrollFrame:GetChildren()) do
-            if btn:IsA("TextButton") and btn ~= _SB then
-                table.insert(allButtons, btn)
-            end
-        end
-
-        -- 搜索逻辑
-        _SB:GetPropertyChangedSignal("Text"):Connect(function()
-            local s = _SB.Text:lower()
-            for _, b in pairs(allButtons) do
-                if s == "" then
-                    b.Visible = true
-                else
-                    b.Visible = b.Text:lower():find(s) ~= nil
-                end
-            end
+    -- 给蓝色 Discord 按钮添加动画效果
+    if discordBtn then
+        discordBtn.MouseEnter:Connect(function()
+            TweenService:Create(discordBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(88, 101, 242)}):Play()
+            TweenService:Create(discordBtn, TweenInfo.new(0.2), {Size = UDim2.new(0.95, 0, 0, 55)}):Play()
+        end)
+        discordBtn.MouseLeave:Connect(function()
+            TweenService:Create(discordBtn, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(60, 80, 200)}):Play()
+            TweenService:Create(discordBtn, TweenInfo.new(0.2), {Size = UDim2.new(0.9, 0, 0, 50)}):Play()
+        end)
+        discordBtn.MouseButton1Down:Connect(function()
+            discordBtn:TweenSize(UDim2.new(0.85, 0, 0, 45), "Out", "Quad", 0.1, true)
+        end)
+        discordBtn.MouseButton1Up:Connect(function()
+            discordBtn:TweenSize(UDim2.new(0.95, 0, 0, 55), "Out", "Quad", 0.1, true)
         end)
     end
+
+    -- 扫描其他按钮并拦截
+    for _, btn in pairs(scrollFrame:GetChildren()) do
+        if btn:IsA("TextButton") then
+            local txt = btn.Text:upper()
+            local isScript = txt:find("AIMBOT") or txt:find("RIVALS") or txt:find("INFINITE") or txt:find("ADMIN") or txt:find("HUB") or txt:find("连点器")
+            if isScript then
+                table.insert(scriptButtons, btn)
+                local conns = getconnections(btn.MouseButton1Click)
+                if #conns > 0 then
+                    local saved = {}
+                    for _, c in pairs(conns) do table.insert(saved, {Function = c.Function}); c:Disable() end
+                    btn.MouseButton1Click:Connect(function() CreateConfirmUI(saved) end)
+                end
+            elseif txt:find("推出") or txt:find("退出") or txt:find("等待") then
+                table.insert(comingSoonButtons, btn)
+            end
+        end
+    end
+
+    -- 在 AIMBOT 上方插入搜索框
+    local _SB = Instance.new("TextBox", scrollFrame)
+    _SB.LayoutOrder = aimbotBtn.LayoutOrder - 1
+    _SB.Size = UDim2.new(0.9, 0, 0, 75); _SB.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    _SB.PlaceholderText = "🔍 查找脚本..."; _SB.TextSize = 24; _SB.TextColor3 = Color3.new(1, 1, 1); _SB.Font = "GothamBold"
+    Instance.new("UICorner", _SB)
+    local _Stroke = Instance.new("UIStroke", _SB); _Stroke.Thickness = 3; _Stroke.Color = Color3.fromRGB(0, 180, 255)
+
+    _SB:GetPropertyChangedSignal("Text"):Connect(function()
+        local s = _SB.Text:lower()
+        if s == "" then
+            for _, b in pairs(scriptButtons) do b.Visible = true end
+            for _, b in pairs(comingSoonButtons) do b.Visible = true end
+        else
+            for _, b in pairs(scriptButtons) do b.Visible = b.Text:lower():find(s) end
+            for _, b in pairs(comingSoonButtons) do b.Visible = false end
+        end
+    end)
 end)
