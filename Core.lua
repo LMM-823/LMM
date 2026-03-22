@@ -73,13 +73,12 @@ local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50); DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200); DiscordBtn.Text = "JOIN DISCORD"; DiscordBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- [[ 第三栏：基本功能刘某某 (名字已按要求修改) ]]
+-- [[ 第三栏：改名后的按钮 ]]
 local FuncBtn = Instance.new("TextButton", ScrollingFrame)
 FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 基本功能刘某某 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
 
--- ✨ 这里已经按照你的指示填入了 V2.9 脚本地址
+-- ✨ 这里就是你以后要填脚本的位置
 FuncBtn.MouseButton1Click:Connect(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/V2.9.lua"))()
-    end)
+    -- [ 功能脚本填在此处 ]
+    print("点击了：基本功能刘某某")
 end)
