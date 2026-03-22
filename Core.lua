@@ -83,7 +83,7 @@ FuncBtn.MouseButton1Click:Connect(function()
     end)
 end)
 
--- [[ 第四栏：Aimbot (新增) ]]
+-- [[ 第四栏：Aimbot ]]
 local AimBtn = Instance.new("TextButton", ScrollingFrame)
 AimBtn.Size = UDim2.new(0.9, 0, 0, 50); AimBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); AimBtn.Text = "🌚 Aimbot 🌚"; AimBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", AimBtn)
 
@@ -92,4 +92,3 @@ AimBtn.MouseButton1Click:Connect(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V3/main/Resources/Scripts/Main.lua"))()
     end)
 end)
-
