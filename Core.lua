@@ -8,7 +8,7 @@ local Title = Instance.new("TextLabel")
 local ScrollingFrame = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 
--- 基础 UI 设置 (保持截图中的黑底白边)
+-- 基础 UI 设置
 LMM_V4.Name = "LMM_Core_UI"
 LMM_V4.Parent = game:GetService("CoreGui")
 LMM_V4.ResetOnSpawn = false
@@ -19,12 +19,12 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
 MainFrame.Size = UDim2.new(0, 330, 0, 350)
 MainFrame.Active = true
-MainFrame.Draggable = true -- 保持可拖动
+MainFrame.Draggable = true 
 
 UICorner.Parent = MainFrame
 UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
-UIStroke.Color = Color3.new(1, 1, 1) -- 纯白边框
+UIStroke.Color = Color3.new(1, 1, 1) 
 
 -- 标题栏文字
 Title.Name = "Title"
@@ -73,12 +73,18 @@ local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50); DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200); DiscordBtn.Text = "JOIN DISCORD"; DiscordBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- [[ 第三栏：改名后的按钮 ]]
+-- [[ 第三栏：刘某某基本功能 ]]
 local FuncBtn = Instance.new("TextButton", ScrollingFrame)
-FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 基本功能刘某某 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
-
--- ✨ 这里就是你以后要填脚本的位置
+FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 刘某某基本功能 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
 FuncBtn.MouseButton1Click:Connect(function()
-    -- [ 功能脚本填在此处 ]
-    print("点击了：基本功能刘某某")
+    pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/V2.9.lua"))() end)
+end)
+
+-- [[ 第四栏：新增 Aimbot 按钮 ]]
+local AimbotBtn = Instance.new("TextButton", ScrollingFrame)
+AimbotBtn.Size = UDim2.new(0.9, 0, 0, 50); AimbotBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); AimbotBtn.Text = "🌚 Aimbot 🌚"; AimbotBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", AimbotBtn)
+AimbotBtn.MouseButton1Click:Connect(function()
+    pcall(function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677"))()
+    end)
 end)
