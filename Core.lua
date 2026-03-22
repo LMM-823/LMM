@@ -1,31 +1,95 @@
--- [[ 🌚 刘某某·核心功能 | Core ]]
-local _CG = game:GetService("CoreGui"); local _UIS = game:GetService("UserInputService")
-if _CG:FindFirstChild("LMM_Core_UI") then _CG.LMM_Core_UI:Destroy() end
-local _S = Instance.new("ScreenGui", _CG); _S.Name = "LMM_Core_UI"
+-- [[ 🌚刘某某脚本🌝 | 恢复图标版 | Core.lua ]]
 
--- 核心菜单界面
-local _M = Instance.new("Frame", _S); _M.Size = UDim2.new(0, 400, 0, 520); _M.Position = UDim2.new(0.02, 0, 0.25, 0); _M.BackgroundColor3 = Color3.fromRGB(15,15,15); Instance.new("UICorner", _M)
-local _Gl = Instance.new("UIStroke", _M); _Gl.Thickness = 3; _Gl.Color = Color3.new(1,0,0) -- 这里的颜色会随 RGB 变化
+local LMM_V4 = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UIStroke = Instance.new("UIStroke")
+local UICorner = Instance.new("UICorner")
+local Title = Instance.new("TextLabel")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
 
--- 【恢复：悬浮球】
-local _Mini = Instance.new("TextButton", _S); _Mini.Size = UDim2.new(0, 65, 0, 65); _Mini.Visible = false; _Mini.Text = ""; _Mini.BackgroundColor3 = Color3.new(0,0,0); Instance.new("UICorner", _Mini).CornerRadius = UDim.new(1,0)
-local _MS = Instance.new("UIStroke", _Mini); _MS.Thickness = 3; _MS.Color = Color3.new(1,0,0)
+-- 基础 UI 设置
+LMM_V4.Name = "LMM_Core_UI"
+LMM_V4.Parent = game:GetService("CoreGui")
+LMM_V4.ResetOnSpawn = false
 
--- 【恢复：减号和打叉】
-local _TB = Instance.new("Frame", _M); _TB.Size = UDim2.new(1, 0, 0, 55); _TB.BackgroundTransparency = 1
-local function _Ctrl(t, x, c, f)
-    local b = Instance.new("TextButton", _TB); b.Size = UDim2.new(0, 32, 0, 32); b.Position = UDim2.new(1, x, 0.5, -16); b.Text = t; b.BackgroundColor3 = c; b.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", b); b.MouseButton1Click:Connect(f)
-end
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = LMM_V4
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
+MainFrame.Size = UDim2.new(0, 330, 0, 350)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
--- 减号：隐藏菜单，显示球
-_Ctrl("—", -90, Color3.fromRGB(50, 50, 50), function() 
-    _M.Visible = false; _Mini.Position = _M.Position; _Mini.Visible = true 
+UICorner.Parent = MainFrame
+UIStroke.Parent = MainFrame
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(255, 0, 255)
+
+-- 标题文字
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.Size = UDim2.new(0, 200, 0, 40)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "🌚刘某某脚本🌝"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.TextSize = 18
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- 🛠️ 恢复关闭按钮 (X)
+local CloseBtn = Instance.new("TextButton", MainFrame)
+CloseBtn.Name = "CloseBtn"
+CloseBtn.Size = UDim2.new(0, 30, 0, 30)
+CloseBtn.Position = UDim2.new(1, -35, 0, 5)
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Text = "×"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 50, 50)
+CloseBtn.TextSize = 25
+CloseBtn.Font = "GothamBold"
+CloseBtn.MouseButton1Click:Connect(function() LMM_V4:Destroy() end)
+
+-- 🛠️ 恢复最小化按钮 (-)
+local MinBtn = Instance.new("TextButton", MainFrame)
+MinBtn.Name = "MinBtn"
+MinBtn.Size = UDim2.new(0, 30, 0, 30)
+MinBtn.Position = UDim2.new(1, -70, 0, 5)
+MinBtn.BackgroundTransparency = 1
+MinBtn.Text = "-"
+MinBtn.TextColor3 = Color3.new(1, 1, 1)
+MinBtn.TextSize = 25
+MinBtn.Font = "GothamBold"
+
+local minimized = false
+MinBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    ScrollingFrame.Visible = not minimized
+    MainFrame:TweenSize(minimized and UDim2.new(0, 330, 0, 40) or UDim2.new(0, 330, 0, 350), "Out", "Quad", 0.3, true)
 end)
 
--- 打叉：彻底关闭功能
-_Ctrl("×", -45, Color3.fromRGB(180, 50, 50), function() _S:Destroy() end)
+-- 内容滚动区域
+ScrollingFrame.Parent = MainFrame
+ScrollingFrame.BackgroundTransparency = 1
+ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
+ScrollingFrame.Size = UDim2.new(1, -20, 1, -60)
+ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 500)
+ScrollingFrame.ScrollBarThickness = 0
 
--- 悬浮球点击恢复逻辑
-local _pT = 0
-_Mini.MouseButton1Down:Connect(function() _pT = tick() end)
-_Mini.MouseButton1Up:Connect(function() if tick() - _pT < 0.2 then _M.Position = _Mini.Position; _M.Visible = true; _Mini.Visible = false end end)
+UIListLayout.Parent = ScrollingFrame
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIListLayout.Padding = UDim.new(0, 10)
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- DC 按钮 (排在第二)
+local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
+DiscordBtn.Name = "JOIN DISCORD"
+DiscordBtn.LayoutOrder = 2
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200)
+DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50)
+DiscordBtn.Font = "GothamBold"
+DiscordBtn.Text = "JOIN DISCORD"
+DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
+DiscordBtn.TextSize = 18
+Instance.new("UICorner", DiscordBtn)
+DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/yourlink") end)
