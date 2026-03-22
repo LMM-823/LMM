@@ -16,7 +16,7 @@ LMM_V4.ResetOnSpawn = false
 -- 主面板 (严格 330x350)
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = LMM_V4
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- 纯黑背景
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
 MainFrame.Size = UDim2.new(0, 330, 0, 350)
 MainFrame.Active = true
@@ -25,7 +25,7 @@ MainFrame.Draggable = true -- 保持可拖动
 UICorner.Parent = MainFrame
 UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
-UIStroke.Color = Color3.new(1, 1, 1) -- 纯白边框 (无发光)
+UIStroke.Color = Color3.new(1, 1, 1) -- 纯白边框
 
 -- 标题：刘某某脚本库
 Title.Name = "Title"
@@ -53,7 +53,7 @@ MinBtn.MouseButton1Click:Connect(function()
     MainFrame:TweenSize(minimized and UDim2.new(0, 330, 0, 40) or UDim2.new(0, 330, 0, 350), "Out", "Quad", 0.3, true)
 end)
 
--- 滚动区域 (支持上下拉)
+-- 滚动区域 (上下拉空间)
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
@@ -66,7 +66,7 @@ UIListLayout.Parent = ScrollingFrame
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 10)
 
--- [[ 第一项：搜索框 (无发光，纯粹搜索) ]]
+-- [[ 1. 搜索框 (纯粹搜索，不发光) ]]
 local SearchBox = Instance.new("TextBox", ScrollingFrame)
 SearchBox.Size = UDim2.new(0.9, 0, 0, 45)
 SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -75,11 +75,13 @@ SearchBox.TextColor3 = Color3.new(0.6, 0.6, 0.6)
 SearchBox.TextSize = 14
 Instance.new("UICorner", SearchBox)
 
--- [[ 第二项：加入DC群 ]]
+-- [[ 2. JOIN DISCORD ]]
 local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50)
-DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200) -- Discord 蓝色
-DiscordBtn.Text = "加入DC群"
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200)
+DiscordBtn.Text = "JOIN DISCORD"
 DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
 Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
+
+-- 你以后添加新按钮只需要从这里开始...
