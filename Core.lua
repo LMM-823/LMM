@@ -93,3 +93,39 @@ DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
 DiscordBtn.TextSize = 18
 Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/yourlink") end)
+
+-- ✨ 新增：第三个按钮 + 确认 UI
+local function ShowConfirm(name, cb)
+    local cf = Instance.new("Frame", LMM_V4)
+    cf.Size = UDim2.new(0, 260, 0, 120)
+    cf.Position = UDim2.new(0.5, -130, 0.5, -60)
+    cf.BackgroundColor3 = Color3.new(0, 0, 0)
+    Instance.new("UICorner", cf)
+    local stroke = Instance.new("UIStroke", cf); stroke.Color = Color3.new(1,1,1); stroke.Thickness = 2
+    
+    local t = Instance.new("TextLabel", cf)
+    t.Size = UDim2.new(1, 0, 0.6, 0); t.BackgroundTransparency = 1; t.Text = "确定运行 "..name.." ?"; t.TextColor3 = Color3.new(1,1,1); t.TextSize = 16; t.Font = "GothamBold"
+    
+    local y = Instance.new("TextButton", cf)
+    y.Size = UDim2.new(0.4, 0, 0.3, 0); y.Position = UDim2.new(0.05, 0, 0.6, 0); y.BackgroundColor3 = Color3.fromRGB(0, 120, 0); y.Text = "确定"; y.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", y)
+    
+    local n = Instance.new("TextButton", cf)
+    n.Size = UDim2.new(0.4, 0, 0.3, 0); n.Position = UDim2.new(0.55, 0, 0.6, 0); n.BackgroundColor3 = Color3.fromRGB(120, 0, 0); n.Text = "取消"; n.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", n)
+    
+    y.MouseButton1Click:Connect(function() cf:Destroy(); cb() end)
+    n.MouseButton1Click:Connect(function() cf:Destroy() end)
+end
+
+local V29Btn = Instance.new("TextButton", ScrollingFrame)
+V29Btn.Name = "刘某某 V2.9"
+V29Btn.LayoutOrder = 3
+V29Btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+V29Btn.Size = UDim2.new(0.9, 0, 0, 50)
+V29Btn.Font = "GothamBold"; V29Btn.Text = "🌚 运行 刘某某 V2.9 🌚"; V29Btn.TextColor3 = Color3.new(1, 1, 1); V29Btn.TextSize = 16
+Instance.new("UICorner", V29Btn)
+V29Btn.MouseButton1Click:Connect(function()
+    ShowConfirm("刘某某 V2.9", function()
+        -- 此处放入核心功能逻辑
+        print("核心功能启动")
+    end)
+end)
