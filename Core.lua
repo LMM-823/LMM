@@ -73,11 +73,11 @@ local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50); DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200); DiscordBtn.Text = "JOIN DISCORD"; DiscordBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- [[ 第三栏：刘某某基本功能 (仅在此处执行改名) ]]
+-- [[ 第三栏：改名后的按钮 ]]
 local FuncBtn = Instance.new("TextButton", ScrollingFrame)
 FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 基本功能刘某某 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
 
--- ✨ 这里就是你以后要填脚本的位置
+-- ✨ 功能逻辑保持原样，仅供以后填充
 FuncBtn.MouseButton1Click:Connect(function()
     -- [ 功能脚本填在此处 ]
     print("点击了：基本功能刘某某")
