@@ -46,7 +46,6 @@ _SF.Active = true
 local _L = Instance.new("UIListLayout", _SF)
 _L.Padding = UDim.new(0, 15); _L.HorizontalAlignment = "Center"; _L.SortOrder = "LayoutOrder"
 
--- 工厂函数 (颜色/开关/脚本)
 local function _CreateColorBar(key, order)
     local f = Instance.new("Frame", _SF); f.LayoutOrder = order; f.Size = UDim2.new(0.88, 0, 0, 35); f.BackgroundTransparency = 1
     local layout = Instance.new("UIListLayout", f); layout.FillDirection = "Horizontal"; layout.HorizontalAlignment = "Center"; layout.Padding = UDim.new(0, 10)
@@ -72,7 +71,7 @@ local function _CreateS(name, url, order)
     _RS.Heartbeat:Connect(function() s.Color = _RGB_CORE.Color end)
 end
 
--- 布局集成
+-- ==================== 顺位布局集成 ====================
 local _In1 = Instance.new("TextBox", _SF); _In1.LayoutOrder = 1; _In1.Size = UDim2.new(0.88, 0, 0, 45); _In1.BackgroundColor3 = Color3.fromRGB(25, 25, 25); _In1.Text = "行走速度: 50"; _In1.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", _In1)
 _In1.FocusLost:Connect(function() _G_LMM_88.v_val_1 = tonumber(_In1.Text:match("%d+")) or 50; _In1.Text = "行走速度: ".._G_LMM_88.v_val_1 end)
 
@@ -95,7 +94,25 @@ _CreateS("Owl Hub (极简稳定版)", "https://raw.githubusercontent.com/CriShou
 
 local _ACBtn = Instance.new("TextButton", _SF); _ACBtn.LayoutOrder = 18; _ACBtn.Size = UDim2.new(0.88, 0, 0, 60); _ACBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); _ACBtn.Text = "自动连点器（刘某某）"; _ACBtn.Font = "GothamBold"; _ACBtn.TextSize = 14; _ACBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", _ACBtn)
 local _ACS = Instance.new("UIStroke", _ACBtn); _ACS.Thickness = 2; _RS.Heartbeat:Connect(function() _ACS.Color = _RGB_CORE.Color end)
-_ACBtn.MouseButton1Click:Connect(function() loadstring([[--连点器代码内容省略，保持原样--]])() end)
+_ACBtn.MouseButton1Click:Connect(function()
+    loadstring([[
+        local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+        local MainFrame = Instance.new("Frame", ScreenGui)
+        local Title = Instance.new("TextLabel", MainFrame)
+        local ToggleBtn = Instance.new("TextButton", MainFrame)
+        local SpeedInput = Instance.new("TextBox", MainFrame)
+        local MainStroke = Instance.new("UIStroke", MainFrame)
+        MainFrame.Size = UDim2.new(0, 200, 0, 160); MainFrame.Position = UDim2.new(0.5, -100, 0.4, -90); MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20); MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame)
+        MainStroke.Thickness = 2; MainStroke.ApplyStrokeMode = "Border"
+        Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 10, 0, 5); Title.Size = UDim2.new(1, -40, 0, 35); Title.Font = "GothamBold"; Title.Text = "自动连点器 1.2"; Title.TextColor3 = Color3.new(1,1,1); Title.TextSize = 16
+        SpeedInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35); SpeedInput.Position = UDim2.new(0.1, 0, 0.3, 5); SpeedInput.Size = UDim2.new(0.8, 0, 0, 35); SpeedInput.Text = "0.05"; SpeedInput.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", SpeedInput)
+        ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255); ToggleBtn.Position = UDim2.new(0.1, 0, 0.6, 5); ToggleBtn.Size = UDim2.new(0.8, 0, 0, 40); ToggleBtn.Text = "开启连点"; ToggleBtn.TextColor3 = Color3.new(1,1,1); ToggleBtn.Font = "GothamBold"; Instance.new("UICorner", ToggleBtn)
+        local clicking = false; local vim = game:GetService("VirtualInputManager")
+        ToggleBtn.MouseButton1Click:Connect(function() clicking = not clicking; if clicking then ToggleBtn.Text = "停止连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); task.spawn(function() while clicking do vim:SendMouseButtonEvent(0,0,0,true,game,0); vim:SendMouseButtonEvent(0,0,0,false,game,0); task.wait(tonumber(SpeedInput.Text) or 0.05) end end) else ToggleBtn.Text = "开启连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255) end end)
+        local Close = Instance.new("TextButton", MainFrame); Close.Size = UDim2.new(0, 25, 0, 25); Close.Position = UDim2.new(1, -30, 0, 5); Close.Text = "×"; Close.TextColor3 = Color3.new(1,1,1); Close.BackgroundTransparency = 1; Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+        task.spawn(function() while true do for i = 0, 1, 0.01 do MainStroke.Color = Color3.fromHSV(i, 0.8, 1); task.wait(0.03) end end end)
+    ]])()
+end)
 
 local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 19; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
 
@@ -106,7 +123,6 @@ local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 21; _PH2.Size =
 
 local _Ex = Instance.new("Frame", _SF); _Ex.LayoutOrder = 99; _Ex.Size = UDim2.new(1, 0, 0, 220); _Ex.BackgroundTransparency = 1
 
--- 驱动逻辑保持原样 --
 local _BG = Instance.new("BodyGyro"); local _BV = Instance.new("BodyVelocity")
 _BG.P = 9e4; _BG.MaxTorque = Vector3.new(9e9, 9e9, 9e9); _BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
 
@@ -124,6 +140,28 @@ _RS.Heartbeat:Connect(function()
             else _BG.Parent = nil; _BV.Parent = nil end
         end
     end
+    for _, p in pairs(_P:GetPlayers()) do
+        if p ~= _LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+            local tChar = p.Character; local tHrp = tChar.HumanoidRootPart
+            if _G_LMM_88.v_0x1 then
+                local hl = tChar:FindFirstChild("LMM_ESP") or Instance.new("Highlight", tChar); hl.Name = "LMM_ESP"; hl.FillColor = _G_LMM_88.c_esp; hl.Enabled = true
+            elseif tChar:FindFirstChild("LMM_ESP") then tChar.LMM_ESP:Destroy() end
+            if _G_LMM_88.v_esp_box then
+                local bb = tChar:FindFirstChild("LMM_BOX") or Instance.new("BillboardGui", tChar)
+                if bb.Name ~= "LMM_BOX" then bb.Name = "LMM_BOX"; bb.AlwaysOnTop = true; bb.Size = UDim2.new(4.5, 0, 6, 0); bb.Adornee = tHrp; local f = Instance.new("Frame", bb); f.Size = UDim2.new(1,0,1,0); f.BackgroundTransparency = 1; local st = Instance.new("UIStroke", f); st.Name = "S"; st.Thickness = 2 end
+                bb.Frame.S.Color = _G_LMM_88.c_box; bb.Enabled = true
+            elseif tChar:FindFirstChild("LMM_BOX") then tChar.LMM_BOX:Destroy() end
+            local beam = tHrp:FindFirstChild("LMM_LINE_FIX")
+            if _G_LMM_88.v_esp_line then
+                if not beam and lChar and lChar:FindFirstChild("HumanoidRootPart") then
+                    beam = Instance.new("Beam", tHrp); beam.Name = "LMM_LINE_FIX"
+                    local a0 = lChar.HumanoidRootPart:FindFirstChild("LMM_A0") or Instance.new("Attachment", lChar.HumanoidRootPart); a0.Name = "LMM_A0"
+                    beam.Attachment0 = a0; beam.Attachment1 = Instance.new("Attachment", tHrp); beam.Width0 = 0.1; beam.Width1 = 0.1; beam.FaceCamera = true
+                end
+                if beam then beam.Color = ColorSequence.new(_G_LMM_88.c_line) end
+            elseif beam then beam:Destroy() end
+        end
+    end
 end)
 
 local function _Ctrl(t, x, c, f)
@@ -132,7 +170,6 @@ end
 _Ctrl("×", -45, Color3.fromRGB(180, 50, 50), function() _S:Destroy() end)
 _Ctrl("—", -90, Color3.fromRGB(50, 50, 50), function() _SF.Visible = not _SF.Visible; _M.Size = _SF.Visible and UDim2.new(0, 400, 0, 520) or UDim2.new(0, 400, 0, 55) end)
 
--- 拖动支持
 local _drag, _dStart, _sPos
 _TB.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then _drag = true; _dStart = i.Position; _sPos = _M.Position end end)
 _UIS.InputChanged:Connect(function(i) if _drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then local d = i.Position - _dStart; _M.Position = UDim2.new(_sPos.X.Scale, _sPos.X.Offset + d.X, _sPos.Y.Scale, _sPos.Y.Offset + d.Y) end end)
