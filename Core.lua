@@ -1,5 +1,4 @@
 -- [[ 刘某某脚本库 | Core.lua ]]
-
 local LMM_V4 = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local UIStroke = Instance.new("UIStroke")
@@ -53,7 +52,7 @@ MinBtn.MouseButton1Click:Connect(function()
     MainFrame:TweenSize(minimized and UDim2.new(0, 330, 0, 40) or UDim2.new(0, 330, 0, 350), "Out", "Quad", 0.3, true)
 end)
 
--- 滚动区域 (上下拉空间)
+-- 滚动区域 (支持上下拉)
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
@@ -66,22 +65,13 @@ UIListLayout.Parent = ScrollingFrame
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 10)
 
--- [[ 1. 搜索框 (纯粹搜索，不发光) ]]
+-- [[ 1. 搜索框 (不发光) ]]
 local SearchBox = Instance.new("TextBox", ScrollingFrame)
-SearchBox.Size = UDim2.new(0.9, 0, 0, 45)
-SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-SearchBox.Text = "🔍 搜索脚本..."
-SearchBox.TextColor3 = Color3.new(0.6, 0.6, 0.6)
-SearchBox.TextSize = 14
-Instance.new("UICorner", SearchBox)
+SearchBox.Size = UDim2.new(0.9, 0, 0, 45); SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30); SearchBox.Text = "🔍 搜索脚本..."; SearchBox.TextColor3 = Color3.new(0.6, 0.6, 0.6); SearchBox.TextSize = 14; Instance.new("UICorner", SearchBox)
 
 -- [[ 2. JOIN DISCORD ]]
 local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
-DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50)
-DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200)
-DiscordBtn.Text = "JOIN DISCORD"
-DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
-Instance.new("UICorner", DiscordBtn)
+DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50); DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200); DiscordBtn.Text = "JOIN DISCORD"; DiscordBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- 你以后添加新按钮只需要从这里开始...
+-- [[ 这里以后放你的其他脚本按钮 ]]
