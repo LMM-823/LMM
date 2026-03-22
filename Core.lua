@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 | 1.白边框 2.DC动画 3.纯净滑动区 | Core.lua ]]
+-- [[ 🌚刘某某脚本🌝 | 1.搜索 2.DC 3.新按钮 | Core.lua ]]
 
 local LMM_V4 = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
@@ -21,13 +21,12 @@ MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
 MainFrame.Size = UDim2.new(0, 330, 0, 350)
 MainFrame.Active = true
-MainFrame.Draggable = true -- 开启拖动
+MainFrame.Draggable = true
 
 UICorner.Parent = MainFrame
 UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
--- 🛠️ 修复点：边框改为纯白色
-UIStroke.Color = Color3.fromRGB(255, 255, 255)
+UIStroke.Color = Color3.fromRGB(255, 255, 255) -- 保持白色边框
 
 -- 3. 标题栏
 Title.Name = "Title"
@@ -54,58 +53,59 @@ local function CreateHeaderBtn(name, text, pos, color, callback)
     btn.Font = "GothamBold"
     btn.MouseButton1Click:Connect(callback)
 end
--- 🛠️ 恢复点：红色的 X，白色的 -
 CreateHeaderBtn("CloseBtn", "×", UDim2.new(1, -35, 0, 5), Color3.fromRGB(255, 50, 50), function() LMM_V4:Destroy() end)
 CreateHeaderBtn("MinBtn", "-", UDim2.new(1, -70, 0, 5), Color3.new(1, 1, 1), function()
     ScrollingFrame.Visible = not ScrollingFrame.Visible
     MainFrame:TweenSize(ScrollingFrame.Visible and UDim2.new(0, 330, 0, 350) or UDim2.new(0, 330, 0, 45), "Out", "Quad", 0.3, true)
 end)
 
--- 5. 核心可滑动区 (清空多余按钮)
+-- 5. 核心可滑动区
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
 ScrollingFrame.Size = UDim2.new(1, -20, 1, -60)
--- 🛠️ 修复点：CanvasSize 设大，保证能滑动
 ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 1000)
 ScrollingFrame.ScrollBarThickness = 2
-ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255) -- 白边框配白滚动条
+ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
 
 UIListLayout.Parent = ScrollingFrame
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 10)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- 6. 创建唯一的 DC 按钮并添加动画
-local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
-DiscordBtn.Name = "JOIN DISCORD"
-DiscordBtn.LayoutOrder = 2 -- 锁死在第二位
-DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200)
-DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50)
-DiscordBtn.Font = Enum.Font.GothamBold
-DiscordBtn.Text = "JOIN DISCORD"
-DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
-DiscordBtn.TextSize = 18
-DiscordBtn.Active = true
-Instance.new("UICorner", DiscordBtn)
+-- 6. 创建按钮的函数 (带动画)
+local function CreateStyledButton(name, text, order, color, callback)
+    local btn = Instance.new("TextButton", ScrollingFrame)
+    btn.Name = name
+    btn.LayoutOrder = order
+    btn.BackgroundColor3 = color
+    btn.Size = UDim2.new(0, 297, 0, 50)
+    btn.Font = Enum.Font.GothamBold
+    btn.Text = text
+    btn.TextColor3 = Color3.new(1, 1, 1)
+    btn.TextSize = 18
+    Instance.new("UICorner", btn)
 
--- 🛠️ 恢复点：点击动画 (缩小 -> 放大 -> 还原)
-local originalSize = UDim2.new(0.9, 0, 0, 50)
-local minimizedSize = UDim2.new(0.85, 0, 0, 45) -- 缩小
-local maximizedSize = UDim2.new(0.95, 0, 0, 55) -- 放大
-
-DiscordBtn.MouseButton1Click:Connect(function()
-    setclipboard("https://discord.gg/yourlink") -- 加入群组逻辑
-    
-    -- 运行动画
-    task.spawn(function()
-        -- 缩小
-        TweenService:Create(DiscordBtn, TweenInfo.new(0.15), {Size = minimizedSize}):Play()
-        task.wait(0.15)
-        -- 放大
-        TweenService:Create(DiscordBtn, TweenInfo.new(0.15), {Size = maximizedSize}):Play()
-        task.wait(0.15)
-        -- 还原
-        TweenService:Create(DiscordBtn, TweenInfo.new(0.15), {Size = originalSize}):Play()
+    btn.MouseButton1Click:Connect(function()
+        if callback then callback() end
+        -- 点击动画
+        task.spawn(function()
+            TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, 280, 0, 45)}):Play()
+            task.wait(0.15)
+            TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, 310, 0, 55)}):Play()
+            task.wait(0.15)
+            TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, 297, 0, 50)}):Play()
+        end)
     end)
+    return btn
+end
+
+-- 第二个按钮：JOIN DISCORD
+CreateStyledButton("JOIN DISCORD", "JOIN DISCORD", 2, Color3.fromRGB(60, 80, 200), function()
+    setclipboard("https://discord.gg/yourlink")
+end)
+
+-- 🛠️ 第三个按钮：占位按钮 (无功能)
+CreateStyledButton("ScriptButton3", "待添加功能", 3, Color3.fromRGB(40, 40, 40), function()
+    -- 暂无功能
 end)
