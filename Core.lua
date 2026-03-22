@@ -8,23 +8,24 @@ local Title = Instance.new("TextLabel")
 local ScrollingFrame = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 
--- 基础 UI 设置
+-- UI 核心容器
 LMM_V4.Name = "LMM_Library_UI"
 LMM_V4.Parent = game:GetService("CoreGui")
 LMM_V4.ResetOnSpawn = false
 
+-- 主面板 (严格 330x350)
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = LMM_V4
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15) -- 纯黑背景
 MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
-MainFrame.Size = UDim2.new(0, 330, 0, 350) -- 与图片大小一致
+MainFrame.Size = UDim2.new(0, 330, 0, 350)
 MainFrame.Active = true
-MainFrame.Draggable = true -- 可拖动
+MainFrame.Draggable = true -- 保持可拖动
 
 UICorner.Parent = MainFrame
 UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
-UIStroke.Color = Color3.new(1, 1, 1) -- 纯白边框
+UIStroke.Color = Color3.new(1, 1, 1) -- 纯白边框 (无发光)
 
 -- 标题：刘某某脚本库
 Title.Name = "Title"
@@ -33,14 +34,15 @@ Title.BackgroundTransparency = 1
 Title.Position = UDim2.new(0, 10, 0, 0)
 Title.Size = UDim2.new(0, 200, 0, 40)
 Title.Font = Enum.Font.GothamBold
-Title.Text = "刘某某脚本库" -- 严格按要求命名
+Title.Text = "刘某某脚本库"
 Title.TextColor3 = Color3.new(1, 1, 1)
 Title.TextSize = 18
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
--- 🛠️ 顶部控制键：减号和打叉
+-- 🛠️ 功能键：- 和 ×
 local CloseBtn = Instance.new("TextButton", MainFrame)
-CloseBtn.Size = UDim2.new(0, 30, 0, 30); CloseBtn.Position = UDim2.new(1, -35, 0, 5); CloseBtn.BackgroundTransparency = 1; CloseBtn.Text = "×"; CloseBtn.TextColor3 = Color3.fromRGB(255, 50, 50); CloseBtn.TextSize = 25; CloseBtn.MouseButton1Click:Connect(function() LMM_V4:Destroy() end)
+CloseBtn.Size = UDim2.new(0, 30, 0, 30); CloseBtn.Position = UDim2.new(1, -35, 0, 5); CloseBtn.BackgroundTransparency = 1; CloseBtn.Text = "×"; CloseBtn.TextColor3 = Color3.fromRGB(255, 50, 50); CloseBtn.TextSize = 25
+CloseBtn.MouseButton1Click:Connect(function() LMM_V4:Destroy() end)
 
 local MinBtn = Instance.new("TextButton", MainFrame)
 MinBtn.Size = UDim2.new(0, 30, 0, 30); MinBtn.Position = UDim2.new(1, -70, 0, 5); MinBtn.BackgroundTransparency = 1; MinBtn.Text = "-"; MinBtn.TextColor3 = Color3.new(1, 1, 1); MinBtn.TextSize = 25
@@ -51,7 +53,7 @@ MinBtn.MouseButton1Click:Connect(function()
     MainFrame:TweenSize(minimized and UDim2.new(0, 330, 0, 40) or UDim2.new(0, 330, 0, 350), "Out", "Quad", 0.3, true)
 end)
 
--- 内部滚动区域 (支持上下拉动)
+-- 滚动区域 (支持上下拉)
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
@@ -64,7 +66,7 @@ UIListLayout.Parent = ScrollingFrame
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 10)
 
--- [[ 1. 搜索框 (纯粹搜索，不发光) ]]
+-- [[ 第一项：搜索框 (无发光，纯粹搜索) ]]
 local SearchBox = Instance.new("TextBox", ScrollingFrame)
 SearchBox.Size = UDim2.new(0.9, 0, 0, 45)
 SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -73,13 +75,11 @@ SearchBox.TextColor3 = Color3.new(0.6, 0.6, 0.6)
 SearchBox.TextSize = 14
 Instance.new("UICorner", SearchBox)
 
--- [[ 2. 加入DC群 按钮 ]]
+-- [[ 第二项：加入DC群 ]]
 local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50)
-DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200)
+DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200) -- Discord 蓝色
 DiscordBtn.Text = "加入DC群"
 DiscordBtn.TextColor3 = Color3.new(1, 1, 1)
 Instance.new("UICorner", DiscordBtn)
-DiscordBtn.MouseButton1Click:Connect(function() 
-    setclipboard("https://discord.gg/cjpezEZub") 
-end)
+DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
