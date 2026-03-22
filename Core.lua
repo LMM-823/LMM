@@ -77,7 +77,6 @@ DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg
 local FuncBtn = Instance.new("TextButton", ScrollingFrame)
 FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 刘某某基本功能 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
 
--- ✨ 填入的刘某某脚本
 FuncBtn.MouseButton1Click:Connect(function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/V2.9.lua"))()
 end)
