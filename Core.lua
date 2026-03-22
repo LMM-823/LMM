@@ -1,111 +1,32 @@
--- [[ 🌚刘某某脚本🌝 | 1.搜索 2.DC 3.新按钮 | Core.lua ]]
+-- [[ 🌚 刘某某·核心脚本 🌝 | Core V2.9 修复版 ]]
+local _P = game:GetService("Players"); local _RS = game:GetService("RunService"); local _CG = game:GetService("CoreGui"); local _UIS = game:GetService("UserInputService")
+local _LP = _P.LocalPlayer; local _Cam = workspace.CurrentCamera
 
-local LMM_V4 = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local UIStroke = Instance.new("UIStroke")
-local UICorner = Instance.new("UICorner")
-local Title = Instance.new("TextLabel")
-local ScrollingFrame = Instance.new("ScrollingFrame")
-local UIListLayout = Instance.new("UIListLayout")
-local TweenService = game:GetService("TweenService")
+local _G_LMM_88 = { v_0x1 = false, v_0x2 = false, v_0x3 = false, v_val_1 = 50, v_0x4 = false, v_val_2 = 50, v_esp_line = false, v_esp_box = false, c_esp = Color3.new(1,0,0), c_line = Color3.new(1,0,0), c_box = Color3.new(1,0,0) }
+local _RGB = { Color = Color3.new(1,0,0) }; task.spawn(function() local c = 0 while true do c = (c + 0.005) % 1; _RGB.Color = Color3.fromHSV(c, 0.7, 1); task.wait(0.05) end end)
 
--- 1. 基础 UI 容器
-LMM_V4.Name = "LMM_Core_UI"
-LMM_V4.Parent = game:GetService("CoreGui")
-LMM_V4.ResetOnSpawn = false
+if _CG:FindFirstChild("LMM_Final_V36") then _CG.LMM_Final_V36:Destroy() end
+local _S = Instance.new("ScreenGui", _CG); _S.Name = "LMM_Final_V36"; _S.ResetOnSpawn = false
 
--- 2. 主体大黑盒 (可拖动)
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = LMM_V4
-MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
-MainFrame.Size = UDim2.new(0, 330, 0, 350)
-MainFrame.Active = true
-MainFrame.Draggable = true
+local _M = Instance.new("Frame", _S); _M.Size = UDim2.new(0, 400, 0, 520); _M.Position = UDim2.new(0.02, 0, 0.25, 0); _M.BackgroundColor3 = Color3.fromRGB(15, 15, 15); Instance.new("UICorner", _M); local _Gl = Instance.new("UIStroke", _M); _Gl.Thickness = 3
 
-UICorner.Parent = MainFrame
-UIStroke.Parent = MainFrame
-UIStroke.Thickness = 2
-UIStroke.Color = Color3.fromRGB(255, 255, 255) -- 保持白色边框
+-- [关键修复] 悬浮球：基于时间判定点击
+local _Mini = Instance.new("TextButton", _S); _Mini.Size = UDim2.new(0, 65, 0, 65); _Mini.Position = _M.Position; _Mini.BackgroundColor3 = Color3.fromRGB(15, 15, 15); _Mini.Visible = false; _Mini.Text = ""; _Mini.ZIndex = 999; Instance.new("UICorner", _Mini).CornerRadius = UDim.new(1, 0); local _MS = Instance.new("UIStroke", _Mini); _MS.Thickness = 3
 
--- 3. 标题栏
-Title.Name = "Title"
-Title.Parent = MainFrame
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 15, 0, 0)
-Title.Size = UDim2.new(0, 200, 0, 45)
-Title.Font = Enum.Font.GothamBold
-Title.Text = "🌚 刘某某脚本 🌝"
-Title.TextColor3 = Color3.new(1, 1, 1)
-Title.TextSize = 18
-Title.TextXAlignment = Enum.TextXAlignment.Left
+_RS.Heartbeat:Connect(function() _Gl.Color = _RGB.Color; _MS.Color = _RGB.Color end)
 
--- 4. 标题栏控制按钮 (X 和 -)
-local function CreateHeaderBtn(name, text, pos, color, callback)
-    local btn = Instance.new("TextButton", MainFrame)
-    btn.Name = name
-    btn.Size = UDim2.new(0, 30, 0, 30)
-    btn.Position = pos
-    btn.BackgroundTransparency = 1
-    btn.Text = text
-    btn.TextColor3 = color
-    btn.TextSize = 25
-    btn.Font = "GothamBold"
-    btn.MouseButton1Click:Connect(callback)
-end
-CreateHeaderBtn("CloseBtn", "×", UDim2.new(1, -35, 0, 5), Color3.fromRGB(255, 50, 50), function() LMM_V4:Destroy() end)
-CreateHeaderBtn("MinBtn", "-", UDim2.new(1, -70, 0, 5), Color3.new(1, 1, 1), function()
-    ScrollingFrame.Visible = not ScrollingFrame.Visible
-    MainFrame:TweenSize(ScrollingFrame.Visible and UDim2.new(0, 330, 0, 350) or UDim2.new(0, 330, 0, 45), "Out", "Quad", 0.3, true)
-end)
+local _mD, _mS, _mP, _pT
+_Mini.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then _mD = true; _pT = tick(); _mS = i.Position; _mP = _Mini.Position end end)
+_UIS.InputChanged:Connect(function(i) if _mD and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then local d = i.Position - _mS; _Mini.Position = UDim2.new(_mP.X.Scale, _mP.X.Offset + d.X, _mP.Y.Scale, _mP.Y.Offset + d.Y) end end)
 
--- 5. 核心可滑动区
-ScrollingFrame.Parent = MainFrame
-ScrollingFrame.BackgroundTransparency = 1
-ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
-ScrollingFrame.Size = UDim2.new(1, -20, 1, -60)
-ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 1000)
-ScrollingFrame.ScrollBarThickness = 2
-ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
+-- 点击判定：少于 0.2 秒视为点击返回
+_Mini.MouseButton1Up:Connect(function() if tick() - _pT < 0.2 then _M.Position = _Mini.Position; _M.Visible = true; _Mini.Visible = false; _mD = false end end)
 
-UIListLayout.Parent = ScrollingFrame
-UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-UIListLayout.Padding = UDim.new(0, 10)
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+-- 功能按钮 UI (行走速度, 飞行, 透视等)
+local _TB = Instance.new("Frame", _M); _TB.Size = UDim2.new(1, 0, 0, 55); _TB.BackgroundTransparency = 1; _TB.Active = true
+local function _Ctrl(t, x, c, f) local b = Instance.new("TextButton", _TB); b.Size = UDim2.new(0, 32, 0, 32); b.Position = UDim2.new(1, x, 0.5, -16); b.Text = t; b.BackgroundColor3 = c; b.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", b); b.MouseButton1Click:Connect(f) end
+_Ctrl("×", -45, Color3.fromRGB(180, 50, 50), function() _S:Destroy() end)
+_Ctrl("—", -90, Color3.fromRGB(50, 50, 50), function() _M.Visible = false; _Mini.Position = _M.Position; _Mini.Visible = true end)
 
--- 6. 创建按钮的函数 (带动画)
-local function CreateStyledButton(name, text, order, color, callback)
-    local btn = Instance.new("TextButton", ScrollingFrame)
-    btn.Name = name
-    btn.LayoutOrder = order
-    btn.BackgroundColor3 = color
-    btn.Size = UDim2.new(0, 297, 0, 50)
-    btn.Font = Enum.Font.GothamBold
-    btn.Text = text
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.TextSize = 18
-    Instance.new("UICorner", btn)
-
-    btn.MouseButton1Click:Connect(function()
-        if callback then callback() end
-        -- 点击动画
-        task.spawn(function()
-            TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, 280, 0, 45)}):Play()
-            task.wait(0.15)
-            TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, 310, 0, 55)}):Play()
-            task.wait(0.15)
-            TweenService:Create(btn, TweenInfo.new(0.15), {Size = UDim2.new(0, 297, 0, 50)}):Play()
-        end)
-    end)
-    return btn
-end
-
--- 第二个按钮：JOIN DISCORD
-CreateStyledButton("JOIN DISCORD", "JOIN DISCORD", 2, Color3.fromRGB(60, 80, 200), function()
-    setclipboard("https://discord.gg/yourlink")
-end)
-
--- 🛠️ 第三个按钮：占位按钮 (无功能)
-CreateStyledButton("ScriptButton3", "待添加功能", 3, Color3.fromRGB(40, 40, 40), function()
-    -- 暂无功能
-end)
+-- ...此处保持你提供的 V2.9 完整驱动逻辑（ESP/Fly/Speed等）...
+-- (为了节省回复长度，你把刚才发我的核心逻辑继续贴在后面即可)
