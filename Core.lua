@@ -7,23 +7,26 @@ local Title = Instance.new("TextLabel")
 local ScrollingFrame = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 
+-- UI 核心容器
 LMM_V4.Name = "LMM_Library_UI"
 LMM_V4.Parent = game:GetService("CoreGui")
 LMM_V4.ResetOnSpawn = false
 
+-- 主面板 (严格 330x350)
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = LMM_V4
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 MainFrame.Position = UDim2.new(0.5, -165, 0.5, -175)
 MainFrame.Size = UDim2.new(0, 330, 0, 350)
 MainFrame.Active = true
-MainFrame.Draggable = true 
+MainFrame.Draggable = true -- 保持可拖动
 
 UICorner.Parent = MainFrame
 UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
-UIStroke.Color = Color3.new(1, 1, 1)
+UIStroke.Color = Color3.new(1, 1, 1) -- 纯白边框
 
+-- 标题：刘某某脚本库
 Title.Name = "Title"
 Title.Parent = MainFrame
 Title.BackgroundTransparency = 1
@@ -49,6 +52,7 @@ MinBtn.MouseButton1Click:Connect(function()
     MainFrame:TweenSize(minimized and UDim2.new(0, 330, 0, 40) or UDim2.new(0, 330, 0, 350), "Out", "Quad", 0.3, true)
 end)
 
+-- 内部滚动区域
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
