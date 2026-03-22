@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 | 修正版 | Core.lua ]]
+-- [[ 🌚刘某某脚本 | 最终结构修复版 | Core.lua ]]
 
 local LMM_V4 = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
@@ -8,7 +8,7 @@ local Title = Instance.new("TextLabel")
 local ScrollingFrame = Instance.new("ScrollingFrame")
 local UIListLayout = Instance.new("UIListLayout")
 
--- 基础 UI
+-- 基础 UI 设置 (黑底白边)
 LMM_V4.Name = "LMM_Core_UI"
 LMM_V4.Parent = game:GetService("CoreGui")
 LMM_V4.ResetOnSpawn = false
@@ -26,6 +26,7 @@ UIStroke.Parent = MainFrame
 UIStroke.Thickness = 2
 UIStroke.Color = Color3.new(1, 1, 1)
 
+-- 标题栏
 Title.Name = "Title"
 Title.Parent = MainFrame
 Title.BackgroundTransparency = 1
@@ -37,7 +38,7 @@ Title.TextColor3 = Color3.new(1, 1, 1)
 Title.TextSize = 18
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
--- 减号和打叉
+-- 🛠️ 功能键：打叉和减号
 local CloseBtn = Instance.new("TextButton", MainFrame)
 CloseBtn.Size = UDim2.new(0, 30, 0, 30); CloseBtn.Position = UDim2.new(1, -35, 0, 5); CloseBtn.BackgroundTransparency = 1; CloseBtn.Text = "×"; CloseBtn.TextColor3 = Color3.fromRGB(255, 50, 50); CloseBtn.TextSize = 25; CloseBtn.MouseButton1Click:Connect(function() LMM_V4:Destroy() end)
 
@@ -50,6 +51,7 @@ MinBtn.MouseButton1Click:Connect(function()
     MainFrame:TweenSize(min and UDim2.new(0, 330, 0, 40) or UDim2.new(0, 330, 0, 350), "Out", "Quad", 0.3, true)
 end)
 
+-- 滚动区域
 ScrollingFrame.Parent = MainFrame
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0, 10, 0, 50)
@@ -62,23 +64,23 @@ UIListLayout.Parent = ScrollingFrame
 UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 UIListLayout.Padding = UDim.new(0, 10)
 
--- 1. 唯一搜索框
+-- 1. 顶部唯一搜索框
 local SearchBox = Instance.new("TextBox", ScrollingFrame)
-SearchBox.Size = UDim2.new(0.9, 0, 0, 45); SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30); SearchBox.Text = "🔍 搜索脚本..."; SearchBox.TextColor3 = Color3.new(0.6, 0.6, 0.6); SearchBox.TextSize = 14; Instance.new("UICorner", SearchBox)
+SearchBox.Size = UDim2.new(0.9, 0, 0, 45); SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30); SearchBox.Text = "🔍 搜索..."; SearchBox.TextColor3 = Color3.new(0.6, 0.6, 0.6); SearchBox.TextSize = 14; Instance.new("UICorner", SearchBox)
 
--- 2. JOIN DISCORD
+-- 2. JOIN DISCORD 蓝色按钮
 local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50); DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200); DiscordBtn.Text = "JOIN DISCORD"; DiscordBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- 3. 刘某某基本功能 (修复无反应问题)
+-- 3. 刘某某基本功能 (修复版)
 local FuncBtn = Instance.new("TextButton", ScrollingFrame)
 FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 刘某某基本功能 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
 
+-- 🛠️ 直接加载逻辑
 FuncBtn.MouseButton1Click:Connect(function()
-    -- 直接加载核心，不再使用 ShowConfirm 以免拦截
-    task.spawn(function()
-        -- 这里填入 V2.9 核心逻辑，确保直接生效
+    -- 直接加载外部 V2.9 脚本，不再弹窗
+    pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/V2.9.lua"))()
     end)
 end)
