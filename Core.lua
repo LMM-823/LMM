@@ -73,22 +73,19 @@ local DiscordBtn = Instance.new("TextButton", ScrollingFrame)
 DiscordBtn.Size = UDim2.new(0.9, 0, 0, 50); DiscordBtn.BackgroundColor3 = Color3.fromRGB(60, 80, 200); DiscordBtn.Text = "JOIN DISCORD"; DiscordBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", DiscordBtn)
 DiscordBtn.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- [[ 第三栏：刘某某基本功能 ]]
+-- [[ 第三栏：刘某某基本功能 (名字已固定) ]]
 local FuncBtn = Instance.new("TextButton", ScrollingFrame)
 FuncBtn.Size = UDim2.new(0.9, 0, 0, 50); FuncBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); FuncBtn.Text = "🌚 刘某某基本功能 🌚"; FuncBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", FuncBtn)
 
+-- ✨ 填入的刘某某脚本
 FuncBtn.MouseButton1Click:Connect(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/V2.9.lua"))()
-    end)
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/V2.9.lua"))()
 end)
 
--- [[ 第四栏：Aimbot ]]
-local AimBtn = Instance.new("TextButton", ScrollingFrame)
-AimBtn.Size = UDim2.new(0.9, 0, 0, 50); AimBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); AimBtn.Text = "🌚 Aimbot 🌚"; AimBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", AimBtn)
+-- [[ 第四栏：aimbot (新增) ]]
+local AimbotBtn = Instance.new("TextButton", ScrollingFrame)
+AimbotBtn.Size = UDim2.new(0.9, 0, 0, 50); AimbotBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); AimbotBtn.Text = "aimbot"; AimbotBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", AimbotBtn)
 
-AimBtn.MouseButton1Click:Connect(function()
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V3/main/Resources/Scripts/Main.lua"))()
-    end)
+AimbotBtn.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V3/main/Resources/Scripts/Main.lua"))()
 end)
