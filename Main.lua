@@ -1,7 +1,7 @@
 -- [[ 🌚刘某某脚本🌝 | 搜索框白字优化 + 1.搜索 2.DC | Main.lua ]]
 
--- 加载核心框架
-loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/refs/heads/main/Core.lua?t=" .. math.random(1, 999)))()
+-- 加载核心框架 (加上你记得的随机数强制更新)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/Core.lua?t=" .. math.random(1, 999)))()
 
 local _CG = game:GetService("CoreGui")
 
