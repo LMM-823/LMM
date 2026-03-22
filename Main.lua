@@ -1,6 +1,6 @@
 -- [[ 刘某某脚本库 | Main.lua ]]
 local function LoadCore()
-    -- 已为你填入 Core.lua 的 Raw 原始链接
+    -- 已自动接好你的 GitHub Raw 链接
     local core_url = "https://raw.githubusercontent.com/LMM-823/LMM/main/Core.lua" 
     
     local success, result = pcall(function()
