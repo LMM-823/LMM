@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 V2.9 | 自动连点器集成 + 顺位推移 | 2026-03-20 ]]
+-- [[ 🌚刘某某脚本🌝 V2.9 | 搜索栏置顶 + 顺位推移 + 确认UI | 2026-03-20 ]]
 
 local _P = game:GetService("Players")
 local _RS = game:GetService("RunService")
@@ -46,6 +46,31 @@ _SF.Active = true
 local _L = Instance.new("UIListLayout", _SF)
 _L.Padding = UDim.new(0, 15); _L.HorizontalAlignment = "Center"; _L.SortOrder = "LayoutOrder"
 
+-- ==================== 全局确认弹窗 UI ====================
+local _ConfirmFrame = Instance.new("Frame", _S)
+_ConfirmFrame.Size = UDim2.new(0, 260, 0, 140); _ConfirmFrame.Position = UDim2.new(0.5, -130, 0.5, -70)
+_ConfirmFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25); _ConfirmFrame.Visible = false; _ConfirmFrame.ZIndex = 10
+Instance.new("UICorner", _ConfirmFrame)
+local _ConfirmStroke = Instance.new("UIStroke", _ConfirmFrame); _ConfirmStroke.Thickness = 2
+_RS.Heartbeat:Connect(function() _ConfirmStroke.Color = _RGB_CORE.Color end)
+
+local _ConfirmTitle = Instance.new("TextLabel", _ConfirmFrame)
+_ConfirmTitle.Size = UDim2.new(1, 0, 0, 40); _ConfirmTitle.BackgroundTransparency = 1; _ConfirmTitle.Text = "确认执行此脚本？"; _ConfirmTitle.TextColor3 = Color3.new(1,1,1); _ConfirmTitle.Font = "GothamBold"; _ConfirmTitle.TextSize = 16; _ConfirmTitle.ZIndex = 10
+
+local _ConfirmName = Instance.new("TextLabel", _ConfirmFrame)
+_ConfirmName.Size = UDim2.new(1, -20, 0, 40); _ConfirmName.Position = UDim2.new(0, 10, 0, 35)
+_ConfirmName.BackgroundTransparency = 1; _ConfirmName.TextColor3 = Color3.fromRGB(200, 200, 200); _ConfirmName.Font = "Gotham"; _ConfirmName.TextSize = 14; _ConfirmName.TextWrapped = true; _ConfirmName.ZIndex = 10
+
+local _BtnYes = Instance.new("TextButton", _ConfirmFrame)
+_BtnYes.Size = UDim2.new(0, 100, 0, 35); _BtnYes.Position = UDim2.new(0, 20, 0, 85); _BtnYes.BackgroundColor3 = Color3.fromRGB(0, 150, 50); _BtnYes.Text = "执行"; _BtnYes.TextColor3 = Color3.new(1,1,1); _BtnYes.Font = "GothamBold"; _BtnYes.ZIndex = 10; Instance.new("UICorner", _BtnYes)
+
+local _BtnNo = Instance.new("TextButton", _ConfirmFrame)
+_BtnNo.Size = UDim2.new(0, 100, 0, 35); _BtnNo.Position = UDim2.new(1, -120, 0, 85); _BtnNo.BackgroundColor3 = Color3.fromRGB(150, 0, 0); _BtnNo.Text = "取消"; _BtnNo.TextColor3 = Color3.new(1,1,1); _BtnNo.Font = "GothamBold"; _BtnNo.ZIndex = 10; Instance.new("UICorner", _BtnNo)
+
+local _CurrentAction = nil
+_BtnYes.MouseButton1Click:Connect(function() if _CurrentAction then task.spawn(_CurrentAction) end; _ConfirmFrame.Visible = false end)
+_BtnNo.MouseButton1Click:Connect(function() _ConfirmFrame.Visible = false end)
+
 -- 工厂函数 (颜色/开关/脚本)
 local function _CreateColorBar(key, order)
     local f = Instance.new("Frame", _SF); f.LayoutOrder = order; f.Size = UDim2.new(0.88, 0, 0, 35); f.BackgroundTransparency = 1
@@ -68,7 +93,13 @@ end
 
 local function _CreateS(name, url, order)
     local b = Instance.new("TextButton", _SF); b.LayoutOrder = order; b.Size = UDim2.new(0.88, 0, 0, 60); b.BackgroundColor3 = Color3.fromRGB(35, 35, 35); b.Text = name; b.Font = "GothamBold"; b.TextSize = 14; b.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", b)
-    local s = Instance.new("UIStroke", b); s.Thickness = 2.2; b.MouseButton1Click:Connect(function() task.spawn(function() loadstring(game:HttpGet(url))() end) end)
+    b.Name = "ScriptBtn_" .. name -- 加上前缀，给搜索功能识别
+    local s = Instance.new("UIStroke", b); s.Thickness = 2.2; 
+    b.MouseButton1Click:Connect(function() 
+        _ConfirmName.Text = "[" .. name .. "]"
+        _CurrentAction = function() loadstring(game:HttpGet(url))() end
+        _ConfirmFrame.Visible = true
+    end)
     _RS.Heartbeat:Connect(function() s.Color = _RGB_CORE.Color end)
 end
 
@@ -86,45 +117,63 @@ _CreateT("内置穿墙 (NOCLIP)", "v_0x2", 9)
 _CreateT("内置速度开关", "v_0x3", 10)
 _CreateT("内置飞行开关 (FLY)", "v_0x4", 11)
 
-_CreateS("AIMBOT", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677", 12)
-_CreateS("RIVALS NO KEY", "https://raw.githubusercontent.com/idkmsnscriptronlox/Shadow-/refs/heads/main/Shadow", 13)
-_CreateS("1024x1080", "https://raw.githubusercontent.com/ScriptsLMM/Res/main/res.lua", 14)
-_CreateS("Infinite Yield (万能脚本)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", 15)
-_CreateS("Nameless Admin", "https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source", 16)
-_CreateS("Owl Hub (极简稳定版)", "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt", 17)
-
--- 【替换 1：填入自动连点器】
-local _ACBtn = Instance.new("TextButton", _SF); _ACBtn.LayoutOrder = 18; _ACBtn.Size = UDim2.new(0.88, 0, 0, 60); _ACBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); _ACBtn.Text = "自动连点器（刘某某）"; _ACBtn.Font = "GothamBold"; _ACBtn.TextSize = 14; _ACBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", _ACBtn)
-local _ACS = Instance.new("UIStroke", _ACBtn); _ACS.Thickness = 2; _RS.Heartbeat:Connect(function() _ACS.Color = _RGB_CORE.Color end)
-_ACBtn.MouseButton1Click:Connect(function()
-    loadstring([[
-        local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
-        local MainFrame = Instance.new("Frame", ScreenGui)
-        local Title = Instance.new("TextLabel", MainFrame)
-        local ToggleBtn = Instance.new("TextButton", MainFrame)
-        local SpeedInput = Instance.new("TextBox", MainFrame)
-        local MainStroke = Instance.new("UIStroke", MainFrame)
-        MainFrame.Size = UDim2.new(0, 200, 0, 160); MainFrame.Position = UDim2.new(0.5, -100, 0.4, -90); MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20); MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame)
-        MainStroke.Thickness = 2; MainStroke.ApplyStrokeMode = "Border"
-        Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 10, 0, 5); Title.Size = UDim2.new(1, -40, 0, 35); Title.Font = "GothamBold"; Title.Text = "自动连点器 1.2"; Title.TextColor3 = Color3.new(1,1,1); Title.TextSize = 16
-        SpeedInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35); SpeedInput.Position = UDim2.new(0.1, 0, 0.3, 5); SpeedInput.Size = UDim2.new(0.8, 0, 0, 35); SpeedInput.Text = "0.05"; SpeedInput.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", SpeedInput)
-        ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255); ToggleBtn.Position = UDim2.new(0.1, 0, 0.6, 5); ToggleBtn.Size = UDim2.new(0.8, 0, 0, 40); ToggleBtn.Text = "开启连点"; ToggleBtn.TextColor3 = Color3.new(1,1,1); ToggleBtn.Font = "GothamBold"; Instance.new("UICorner", ToggleBtn)
-        local clicking = false; local vim = game:GetService("VirtualInputManager")
-        ToggleBtn.MouseButton1Click:Connect(function() clicking = not clicking; if clicking then ToggleBtn.Text = "停止连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); task.spawn(function() while clicking do vim:SendMouseButtonEvent(0,0,0,true,game,0); vim:SendMouseButtonEvent(0,0,0,false,game,0); task.wait(tonumber(SpeedInput.Text) or 0.05) end end) else ToggleBtn.Text = "开启连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255) end end)
-        local Close = Instance.new("TextButton", MainFrame); Close.Size = UDim2.new(0, 25, 0, 25); Close.Position = UDim2.new(1, -30, 0, 5); Close.Text = "×"; Close.TextColor3 = Color3.new(1,1,1); Close.BackgroundTransparency = 1; Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
-        task.spawn(function() while true do for i = 0, 1, 0.01 do MainStroke.Color = Color3.fromHSV(i, 0.8, 1); task.wait(0.03) end end end)
-    ]])()
+-- ==================== 搜索栏入驻 (第12位) ====================
+local _SearchBar = Instance.new("TextBox", _SF); _SearchBar.LayoutOrder = 12; _SearchBar.Size = UDim2.new(0.88, 0, 0, 45); _SearchBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40); _SearchBar.Text = ""; _SearchBar.PlaceholderText = "🔍 搜索脚本..."; _SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150); _SearchBar.TextColor3 = Color3.new(1,1,1); _SearchBar.Font = "GothamBold"; _SearchBar.TextSize = 14; Instance.new("UICorner", _SearchBar)
+local _SearchS = Instance.new("UIStroke", _SearchBar); _SearchS.Thickness = 1.5; _RS.Heartbeat:Connect(function() _SearchS.Color = _RGB_CORE.Color end)
+_SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
+    local q = string.lower(_SearchBar.Text)
+    for _, c in pairs(_SF:GetChildren()) do
+        if c:IsA("TextButton") and string.match(c.Name, "^ScriptBtn_") then
+            c.Visible = (q == "" or string.find(string.lower(c.Text), q) ~= nil)
+        end
+    end
 end)
 
--- 【顺位 2：在新脚本后重新生成等待位】
-local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 19; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
+-- ==================== 原脚本顺位推移 (+1) ====================
+_CreateS("AIMBOT", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677", 13)
+_CreateS("RIVALS NO KEY", "https://raw.githubusercontent.com/idkmsnscriptronlox/Shadow-/refs/heads/main/Shadow", 14)
+_CreateS("1024x1080", "https://raw.githubusercontent.com/ScriptsLMM/Res/main/res.lua", 15)
+_CreateS("Infinite Yield (万能脚本)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", 16)
+_CreateS("Nameless Admin", "https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source", 17)
+_CreateS("Owl Hub (极简稳定版)", "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt", 18)
 
--- 【顺位 3：填入蓝色按钮】
-local _DCB = Instance.new("TextButton", _SF); _DCB.LayoutOrder = 20; _DCB.Size = UDim2.new(0.88, 0, 0, 60); _DCB.BackgroundColor3 = Color3.fromRGB(88, 101, 242); _DCB.Text = "🔗 JOIN DISCORD 🔗"; _DCB.TextColor3 = Color3.new(1, 1, 1); _DCB.TextScaled = true; Instance.new("UICorner", _DCB)
+-- 【替换 1：自动连点器】 推移至 19 且接入确认UI
+local _ACBtn = Instance.new("TextButton", _SF); _ACBtn.LayoutOrder = 19; _ACBtn.Size = UDim2.new(0.88, 0, 0, 60); _ACBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); _ACBtn.Text = "自动连点器（刘某某）"; _ACBtn.Font = "GothamBold"; _ACBtn.TextSize = 14; _ACBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", _ACBtn)
+_ACBtn.Name = "ScriptBtn_自动连点器" -- 加入搜索池
+local _ACS = Instance.new("UIStroke", _ACBtn); _ACS.Thickness = 2; _RS.Heartbeat:Connect(function() _ACS.Color = _RGB_CORE.Color end)
+_ACBtn.MouseButton1Click:Connect(function()
+    _ConfirmName.Text = "[自动连点器（刘某某）]"
+    _CurrentAction = function()
+        loadstring([[
+            local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+            local MainFrame = Instance.new("Frame", ScreenGui)
+            local Title = Instance.new("TextLabel", MainFrame)
+            local ToggleBtn = Instance.new("TextButton", MainFrame)
+            local SpeedInput = Instance.new("TextBox", MainFrame)
+            local MainStroke = Instance.new("UIStroke", MainFrame)
+            MainFrame.Size = UDim2.new(0, 200, 0, 160); MainFrame.Position = UDim2.new(0.5, -100, 0.4, -90); MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20); MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame)
+            MainStroke.Thickness = 2; MainStroke.ApplyStrokeMode = "Border"
+            Title.BackgroundTransparency = 1; Title.Position = UDim2.new(0, 10, 0, 5); Title.Size = UDim2.new(1, -40, 0, 35); Title.Font = "GothamBold"; Title.Text = "自动连点器 1.2"; Title.TextColor3 = Color3.new(1,1,1); Title.TextSize = 16
+            SpeedInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35); SpeedInput.Position = UDim2.new(0.1, 0, 0.3, 5); SpeedInput.Size = UDim2.new(0.8, 0, 0, 35); SpeedInput.Text = "0.05"; SpeedInput.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", SpeedInput)
+            ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255); ToggleBtn.Position = UDim2.new(0.1, 0, 0.6, 5); ToggleBtn.Size = UDim2.new(0.8, 0, 0, 40); ToggleBtn.Text = "开启连点"; ToggleBtn.TextColor3 = Color3.new(1,1,1); ToggleBtn.Font = "GothamBold"; Instance.new("UICorner", ToggleBtn)
+            local clicking = false; local vim = game:GetService("VirtualInputManager")
+            ToggleBtn.MouseButton1Click:Connect(function() clicking = not clicking; if clicking then ToggleBtn.Text = "停止连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); task.spawn(function() while clicking do vim:SendMouseButtonEvent(0,0,0,true,game,0); vim:SendMouseButtonEvent(0,0,0,false,game,0); task.wait(tonumber(SpeedInput.Text) or 0.05) end end) else ToggleBtn.Text = "开启连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255) end end)
+            local Close = Instance.new("TextButton", MainFrame); Close.Size = UDim2.new(0, 25, 0, 25); Close.Position = UDim2.new(1, -30, 0, 5); Close.Text = "×"; Close.TextColor3 = Color3.new(1,1,1); Close.BackgroundTransparency = 1; Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+            task.spawn(function() while true do for i = 0, 1, 0.01 do MainStroke.Color = Color3.fromHSV(i, 0.8, 1); task.wait(0.03) end end end)
+        ]])()
+    end
+    _ConfirmFrame.Visible = true
+end)
+
+-- 【顺位 2：等待位】 推移至 20
+local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 20; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
+
+-- 【顺位 3：填入蓝色按钮】 推移至 21
+local _DCB = Instance.new("TextButton", _SF); _DCB.LayoutOrder = 21; _DCB.Size = UDim2.new(0.88, 0, 0, 60); _DCB.BackgroundColor3 = Color3.fromRGB(88, 101, 242); _DCB.Text = "🔗 JOIN DISCORD 🔗"; _DCB.TextColor3 = Color3.new(1, 1, 1); _DCB.TextScaled = true; Instance.new("UICorner", _DCB)
 _DCB.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- 【顺位 4：填入即将推出按钮】
-local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 21; _PH2.Size = UDim2.new(0.88, 0, 0, 60); _PH2.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH2.Text = "即将推出..."; _PH2.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH2)
+-- 【顺位 4：填入即将推出按钮】 推移至 22
+local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 22; _PH2.Size = UDim2.new(0.88, 0, 0, 60); _PH2.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH2.Text = "即将推出..."; _PH2.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH2)
 
 -- 超大幅留白 (99号位)
 local _Ex = Instance.new("Frame", _SF); _Ex.LayoutOrder = 99; _Ex.Size = UDim2.new(1, 0, 0, 220); _Ex.BackgroundTransparency = 1
