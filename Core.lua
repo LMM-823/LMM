@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 V2.9 | 搜索栏置顶 + 顺位推移 + 确认UI | 2026-03-20 ]]
+-- [[ 🌚刘某某脚本🌝 V2.9 | 搜索置顶 + 删除1024顺位推移 + 确认UI ]]
 
 local _P = game:GetService("Players")
 local _RS = game:GetService("RunService")
@@ -93,7 +93,7 @@ end
 
 local function _CreateS(name, url, order)
     local b = Instance.new("TextButton", _SF); b.LayoutOrder = order; b.Size = UDim2.new(0.88, 0, 0, 60); b.BackgroundColor3 = Color3.fromRGB(35, 35, 35); b.Text = name; b.Font = "GothamBold"; b.TextSize = 14; b.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", b)
-    b.Name = "ScriptBtn_" .. name -- 加上前缀，给搜索功能识别
+    b.Name = "ScriptBtn_" .. name 
     local s = Instance.new("UIStroke", b); s.Thickness = 2.2; 
     b.MouseButton1Click:Connect(function() 
         _ConfirmName.Text = "[" .. name .. "]"
@@ -129,17 +129,16 @@ _SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
     end
 end)
 
--- ==================== 原脚本顺位推移 (+1) ====================
+-- ==================== 原脚本顺位推移 (+1, 删除了 1024x1080) ====================
 _CreateS("AIMBOT", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677", 13)
 _CreateS("RIVALS NO KEY", "https://raw.githubusercontent.com/idkmsnscriptronlox/Shadow-/refs/heads/main/Shadow", 14)
-_CreateS("1024x1080", "https://raw.githubusercontent.com/ScriptsLMM/Res/main/res.lua", 15)
-_CreateS("Infinite Yield (万能脚本)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", 16)
-_CreateS("Nameless Admin", "https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source", 17)
-_CreateS("Owl Hub (极简稳定版)", "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt", 18)
+_CreateS("Infinite Yield (万能脚本)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", 15)
+_CreateS("Nameless Admin", "https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source", 16)
+_CreateS("Owl Hub (极简稳定版)", "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt", 17)
 
--- 【替换 1：自动连点器】 推移至 19 且接入确认UI
-local _ACBtn = Instance.new("TextButton", _SF); _ACBtn.LayoutOrder = 19; _ACBtn.Size = UDim2.new(0.88, 0, 0, 60); _ACBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); _ACBtn.Text = "自动连点器（刘某某）"; _ACBtn.Font = "GothamBold"; _ACBtn.TextSize = 14; _ACBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", _ACBtn)
-_ACBtn.Name = "ScriptBtn_自动连点器" -- 加入搜索池
+-- 【替换 1：自动连点器】 推移至 18
+local _ACBtn = Instance.new("TextButton", _SF); _ACBtn.LayoutOrder = 18; _ACBtn.Size = UDim2.new(0.88, 0, 0, 60); _ACBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); _ACBtn.Text = "自动连点器（刘某某）"; _ACBtn.Font = "GothamBold"; _ACBtn.TextSize = 14; _ACBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", _ACBtn)
+_ACBtn.Name = "ScriptBtn_自动连点器" 
 local _ACS = Instance.new("UIStroke", _ACBtn); _ACS.Thickness = 2; _RS.Heartbeat:Connect(function() _ACS.Color = _RGB_CORE.Color end)
 _ACBtn.MouseButton1Click:Connect(function()
     _ConfirmName.Text = "[自动连点器（刘某某）]"
@@ -165,15 +164,15 @@ _ACBtn.MouseButton1Click:Connect(function()
     _ConfirmFrame.Visible = true
 end)
 
--- 【顺位 2：等待位】 推移至 20
-local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 20; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
+-- 【顺位 2：等待位】 推移至 19
+local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 19; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
 
--- 【顺位 3：填入蓝色按钮】 推移至 21
-local _DCB = Instance.new("TextButton", _SF); _DCB.LayoutOrder = 21; _DCB.Size = UDim2.new(0.88, 0, 0, 60); _DCB.BackgroundColor3 = Color3.fromRGB(88, 101, 242); _DCB.Text = "🔗 JOIN DISCORD 🔗"; _DCB.TextColor3 = Color3.new(1, 1, 1); _DCB.TextScaled = true; Instance.new("UICorner", _DCB)
+-- 【顺位 3：填入蓝色按钮】 推移至 20
+local _DCB = Instance.new("TextButton", _SF); _DCB.LayoutOrder = 20; _DCB.Size = UDim2.new(0.88, 0, 0, 60); _DCB.BackgroundColor3 = Color3.fromRGB(88, 101, 242); _DCB.Text = "🔗 JOIN DISCORD 🔗"; _DCB.TextColor3 = Color3.new(1, 1, 1); _DCB.TextScaled = true; Instance.new("UICorner", _DCB)
 _DCB.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- 【顺位 4：填入即将推出按钮】 推移至 22
-local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 22; _PH2.Size = UDim2.new(0.88, 0, 0, 60); _PH2.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH2.Text = "即将推出..."; _PH2.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH2)
+-- 【顺位 4：填入即将推出按钮】 推移至 21
+local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 21; _PH2.Size = UDim2.new(0.88, 0, 0, 60); _PH2.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH2.Text = "即将推出..."; _PH2.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH2)
 
 -- 超大幅留白 (99号位)
 local _Ex = Instance.new("Frame", _SF); _Ex.LayoutOrder = 99; _Ex.Size = UDim2.new(1, 0, 0, 220); _Ex.BackgroundTransparency = 1
