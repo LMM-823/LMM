@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 V2.9 | 搜索置顶 + 删除1024顺位推移 + 确认UI ]]
+-- [[ 🌚刘某某脚本🌝 V2.9 | 搜索置顶 + 彻底删除1024x1080 + 确认UI集成 ]]
 
 local _P = game:GetService("Players")
 local _RS = game:GetService("RunService")
@@ -117,7 +117,7 @@ _CreateT("内置穿墙 (NOCLIP)", "v_0x2", 9)
 _CreateT("内置速度开关", "v_0x3", 10)
 _CreateT("内置飞行开关 (FLY)", "v_0x4", 11)
 
--- ==================== 搜索栏入驻 (第12位) ====================
+-- ==================== 搜索栏固定第12位 ====================
 local _SearchBar = Instance.new("TextBox", _SF); _SearchBar.LayoutOrder = 12; _SearchBar.Size = UDim2.new(0.88, 0, 0, 45); _SearchBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40); _SearchBar.Text = ""; _SearchBar.PlaceholderText = "🔍 搜索脚本..."; _SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150); _SearchBar.TextColor3 = Color3.new(1,1,1); _SearchBar.Font = "GothamBold"; _SearchBar.TextSize = 14; Instance.new("UICorner", _SearchBar)
 local _SearchS = Instance.new("UIStroke", _SearchBar); _SearchS.Thickness = 1.5; _RS.Heartbeat:Connect(function() _SearchS.Color = _RGB_CORE.Color end)
 _SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
@@ -129,14 +129,14 @@ _SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
     end
 end)
 
--- ==================== 原脚本顺位推移 (+1, 删除了 1024x1080) ====================
+-- ==================== 脚本顺延排列 (1024x1080 已移除) ====================
 _CreateS("AIMBOT", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677", 13)
 _CreateS("RIVALS NO KEY", "https://raw.githubusercontent.com/idkmsnscriptronlox/Shadow-/refs/heads/main/Shadow", 14)
 _CreateS("Infinite Yield (万能脚本)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", 15)
 _CreateS("Nameless Admin", "https://raw.githubusercontent.com/FilteringEnabled/NamelessAdmin/main/Source", 16)
 _CreateS("Owl Hub (极简稳定版)", "https://raw.githubusercontent.com/CriShoux/OwlHub/master/OwlHub.txt", 17)
 
--- 【替换 1：自动连点器】 推移至 18
+-- 【顺位：自动连点器】
 local _ACBtn = Instance.new("TextButton", _SF); _ACBtn.LayoutOrder = 18; _ACBtn.Size = UDim2.new(0.88, 0, 0, 60); _ACBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35); _ACBtn.Text = "自动连点器（刘某某）"; _ACBtn.Font = "GothamBold"; _ACBtn.TextSize = 14; _ACBtn.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", _ACBtn)
 _ACBtn.Name = "ScriptBtn_自动连点器" 
 local _ACS = Instance.new("UIStroke", _ACBtn); _ACS.Thickness = 2; _RS.Heartbeat:Connect(function() _ACS.Color = _RGB_CORE.Color end)
@@ -164,20 +164,20 @@ _ACBtn.MouseButton1Click:Connect(function()
     _ConfirmFrame.Visible = true
 end)
 
--- 【顺位 2：等待位】 推移至 19
+-- 【末尾：等待位】 
 local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 19; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
 
--- 【顺位 3：填入蓝色按钮】 推移至 20
+-- 【末尾：JOIN DISCORD】
 local _DCB = Instance.new("TextButton", _SF); _DCB.LayoutOrder = 20; _DCB.Size = UDim2.new(0.88, 0, 0, 60); _DCB.BackgroundColor3 = Color3.fromRGB(88, 101, 242); _DCB.Text = "🔗 JOIN DISCORD 🔗"; _DCB.TextColor3 = Color3.new(1, 1, 1); _DCB.TextScaled = true; Instance.new("UICorner", _DCB)
 _DCB.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- 【顺位 4：填入即将推出按钮】 推移至 21
+-- 【末尾：即将推出】
 local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 21; _PH2.Size = UDim2.new(0.88, 0, 0, 60); _PH2.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH2.Text = "即将推出..."; _PH2.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH2)
 
 -- 超大幅留白 (99号位)
 local _Ex = Instance.new("Frame", _SF); _Ex.LayoutOrder = 99; _Ex.Size = UDim2.new(1, 0, 0, 220); _Ex.BackgroundTransparency = 1
 
--- ==================== 驱动逻辑 ====================
+-- ==================== 核心驱动 (透视/飞行/速度) ====================
 local _BG = Instance.new("BodyGyro"); local _BV = Instance.new("BodyVelocity")
 _BG.P = 9e4; _BG.MaxTorque = Vector3.new(9e9, 9e9, 9e9); _BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
 
@@ -195,7 +195,6 @@ _RS.Heartbeat:Connect(function()
             else _BG.Parent = nil; _BV.Parent = nil end
         end
     end
-    -- ESP / 射线 / 方框 渲染逻辑
     for _, p in pairs(_P:GetPlayers()) do
         if p ~= _LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
             local tChar = p.Character; local tHrp = tChar.HumanoidRootPart
@@ -232,3 +231,4 @@ local _drag, _dStart, _sPos
 _TB.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then _drag = true; _dStart = i.Position; _sPos = _M.Position end end)
 _UIS.InputChanged:Connect(function(i) if _drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then local d = i.Position - _dStart; _M.Position = UDim2.new(_sPos.X.Scale, _sPos.X.Offset + d.X, _sPos.Y.Scale, _sPos.Y.Offset + d.Y) end end)
 _UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then _drag = false end end)
+
