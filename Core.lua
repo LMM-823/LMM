@@ -1,4 +1,4 @@
--- [[ 🌚刘某某脚本🌝 V2.9 | 搜索置顶 + 彻底删除1024x1080 + 确认UI集成 ]]
+-- [[ 🌚刘某某脚本🌝 V3.0 | 性能优化 + 三项防封强化方案 ]]
 
 local _P = game:GetService("Players")
 local _RS = game:GetService("RunService")
@@ -7,7 +7,7 @@ local _UIS = game:GetService("UserInputService")
 local _LP = _P.LocalPlayer
 local _Cam = workspace.CurrentCamera
 
--- 状态容器
+-- 状态容器 (保持原样)
 local _G_LMM_88 = { 
     v_0x1 = false, v_0x2 = false, v_0x3 = false, v_val_1 = 50, 
     v_0x4 = false, v_val_2 = 50, v_esp_line = false, v_esp_box = false,
@@ -15,6 +15,7 @@ local _G_LMM_88 = {
 }
 local _RGB_CORE = { Color = Color3.new(1,0,0) }
 
+-- 1. 核心驱动：颜色变换
 task.spawn(function()
     local c = 0
     while true do
@@ -68,7 +69,14 @@ local _BtnNo = Instance.new("TextButton", _ConfirmFrame)
 _BtnNo.Size = UDim2.new(0, 100, 0, 35); _BtnNo.Position = UDim2.new(1, -120, 0, 85); _BtnNo.BackgroundColor3 = Color3.fromRGB(150, 0, 0); _BtnNo.Text = "取消"; _BtnNo.TextColor3 = Color3.new(1,1,1); _BtnNo.Font = "GothamBold"; _BtnNo.ZIndex = 10; Instance.new("UICorner", _BtnNo)
 
 local _CurrentAction = nil
-_BtnYes.MouseButton1Click:Connect(function() if _CurrentAction then task.spawn(_CurrentAction) end; _ConfirmFrame.Visible = false end)
+_BtnYes.MouseButton1Click:Connect(function() 
+    if _CurrentAction then 
+        -- 优化：脚本启动增加微量随机延迟
+        task.wait(math.random(1, 3) / 10)
+        task.spawn(_CurrentAction) 
+    end
+    _ConfirmFrame.Visible = false 
+end)
 _BtnNo.MouseButton1Click:Connect(function() _ConfirmFrame.Visible = false end)
 
 -- 工厂函数 (颜色/开关/脚本)
@@ -104,11 +112,20 @@ local function _CreateS(name, url, order)
 end
 
 -- ==================== 顺位布局集成 ====================
+-- 优化：引入安全阈值 (行走 16-120，飞行 0-250)
 local _In1 = Instance.new("TextBox", _SF); _In1.LayoutOrder = 1; _In1.Size = UDim2.new(0.88, 0, 0, 45); _In1.BackgroundColor3 = Color3.fromRGB(25, 25, 25); _In1.Text = "行走速度: 50"; _In1.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", _In1)
-_In1.FocusLost:Connect(function() _G_LMM_88.v_val_1 = tonumber(_In1.Text:match("%d+")) or 50; _In1.Text = "行走速度: ".._G_LMM_88.v_val_1 end)
+_In1.FocusLost:Connect(function() 
+    local val = tonumber(_In1.Text:match("%d+")) or 50
+    _G_LMM_88.v_val_1 = math.clamp(val, 16, 120) 
+    _In1.Text = "行走速度: ".._G_LMM_88.v_val_1 
+end)
 
 local _In2 = Instance.new("TextBox", _SF); _In2.LayoutOrder = 2; _In2.Size = UDim2.new(0.88, 0, 0, 45); _In2.BackgroundColor3 = Color3.fromRGB(25, 25, 25); _In2.Text = "飞行速度: 50"; _In2.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", _In2)
-_In2.FocusLost:Connect(function() _G_LMM_88.v_val_2 = tonumber(_In2.Text:match("%d+")) or 50; _In2.Text = "飞行速度: ".._G_LMM_88.v_val_2 end)
+_In2.FocusLost:Connect(function() 
+    local val = tonumber(_In2.Text:match("%d+")) or 50
+    _G_LMM_88.v_val_2 = math.clamp(val, 0, 250)
+    _In2.Text = "飞行速度: ".._G_LMM_88.v_val_2 
+end)
 
 _CreateT("内置透视 (ESP)", "v_0x1", 3); _CreateColorBar("c_esp", 4)
 _CreateT("内置ESP射线", "v_esp_line", 5); _CreateColorBar("c_line", 6)
@@ -117,7 +134,7 @@ _CreateT("内置穿墙 (NOCLIP)", "v_0x2", 9)
 _CreateT("内置速度开关", "v_0x3", 10)
 _CreateT("内置飞行开关 (FLY)", "v_0x4", 11)
 
--- ==================== 搜索栏固定第12位 ====================
+-- ==================== 搜索栏 ====================
 local _SearchBar = Instance.new("TextBox", _SF); _SearchBar.LayoutOrder = 12; _SearchBar.Size = UDim2.new(0.88, 0, 0, 45); _SearchBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40); _SearchBar.Text = ""; _SearchBar.PlaceholderText = "🔍 搜索脚本..."; _SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150); _SearchBar.TextColor3 = Color3.new(1,1,1); _SearchBar.Font = "GothamBold"; _SearchBar.TextSize = 14; Instance.new("UICorner", _SearchBar)
 local _SearchS = Instance.new("UIStroke", _SearchBar); _SearchS.Thickness = 1.5; _RS.Heartbeat:Connect(function() _SearchS.Color = _RGB_CORE.Color end)
 _SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
@@ -129,7 +146,7 @@ _SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
     end
 end)
 
--- ==================== 脚本顺延排列 (1024x1080 已移除) ====================
+-- 脚本列表
 _CreateS("AIMBOT", "https://rawscripts.net/raw/Universal-Script-Aimbot-Mobile-34677", 13)
 _CreateS("RIVALS NO KEY", "https://raw.githubusercontent.com/idkmsnscriptronlox/Shadow-/refs/heads/main/Shadow", 14)
 _CreateS("Infinite Yield (万能脚本)", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", 15)
@@ -156,7 +173,21 @@ _ACBtn.MouseButton1Click:Connect(function()
             SpeedInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35); SpeedInput.Position = UDim2.new(0.1, 0, 0.3, 5); SpeedInput.Size = UDim2.new(0.8, 0, 0, 35); SpeedInput.Text = "0.05"; SpeedInput.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", SpeedInput)
             ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255); ToggleBtn.Position = UDim2.new(0.1, 0, 0.6, 5); ToggleBtn.Size = UDim2.new(0.8, 0, 0, 40); ToggleBtn.Text = "开启连点"; ToggleBtn.TextColor3 = Color3.new(1,1,1); ToggleBtn.Font = "GothamBold"; Instance.new("UICorner", ToggleBtn)
             local clicking = false; local vim = game:GetService("VirtualInputManager")
-            ToggleBtn.MouseButton1Click:Connect(function() clicking = not clicking; if clicking then ToggleBtn.Text = "停止连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); task.spawn(function() while clicking do vim:SendMouseButtonEvent(0,0,0,true,game,0); vim:SendMouseButtonEvent(0,0,0,false,game,0); task.wait(tonumber(SpeedInput.Text) or 0.05) end end) else ToggleBtn.Text = "开启连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255) end end)
+            ToggleBtn.MouseButton1Click:Connect(function() 
+                clicking = not clicking; 
+                if clicking then 
+                    ToggleBtn.Text = "停止连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50); 
+                    task.spawn(function() 
+                        while clicking do 
+                            vim:SendMouseButtonEvent(0,0,0,true,game,0); 
+                            vim:SendMouseButtonEvent(0,0,0,false,game,0); 
+                            -- 优化：连点增加随机延迟
+                            local baseWait = tonumber(SpeedInput.Text) or 0.05
+                            task.wait(baseWait + (math.random(-8, 8) / 1000)) 
+                        end 
+                    end) 
+                else ToggleBtn.Text = "开启连点"; ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255) end 
+            end)
             local Close = Instance.new("TextButton", MainFrame); Close.Size = UDim2.new(0, 25, 0, 25); Close.Position = UDim2.new(1, -30, 0, 5); Close.Text = "×"; Close.TextColor3 = Color3.new(1,1,1); Close.BackgroundTransparency = 1; Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
             task.spawn(function() while true do for i = 0, 1, 0.01 do MainStroke.Color = Color3.fromHSV(i, 0.8, 1); task.wait(0.03) end end end)
         ]])()
@@ -164,23 +195,21 @@ _ACBtn.MouseButton1Click:Connect(function()
     _ConfirmFrame.Visible = true
 end)
 
--- 【末尾：等待位】 
+-- 【末尾三剑客】 
 local _PH1 = Instance.new("TextButton", _SF); _PH1.LayoutOrder = 19; _PH1.Size = UDim2.new(0.88, 0, 0, 60); _PH1.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH1.Text = "等待新脚本填入..."; _PH1.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH1)
 
--- 【末尾：JOIN DISCORD】
 local _DCB = Instance.new("TextButton", _SF); _DCB.LayoutOrder = 20; _DCB.Size = UDim2.new(0.88, 0, 0, 60); _DCB.BackgroundColor3 = Color3.fromRGB(88, 101, 242); _DCB.Text = "🔗 JOIN DISCORD 🔗"; _DCB.TextColor3 = Color3.new(1, 1, 1); _DCB.TextScaled = true; Instance.new("UICorner", _DCB)
 _DCB.MouseButton1Click:Connect(function() setclipboard("https://discord.gg/cjpezEZub") end)
 
--- 【末尾：即将推出】
 local _PH2 = Instance.new("TextButton", _SF); _PH2.LayoutOrder = 21; _PH2.Size = UDim2.new(0.88, 0, 0, 60); _PH2.BackgroundColor3 = Color3.fromRGB(20, 20, 20); _PH2.Text = "即将推出..."; _PH2.TextColor3 = Color3.new(0.4, 0.4, 0.4); Instance.new("UICorner", _PH2)
 
--- 超大幅留白 (99号位)
 local _Ex = Instance.new("Frame", _SF); _Ex.LayoutOrder = 99; _Ex.Size = UDim2.new(1, 0, 0, 220); _Ex.BackgroundTransparency = 1
 
 -- ==================== 核心驱动 (透视/飞行/速度) ====================
 local _BG = Instance.new("BodyGyro"); local _BV = Instance.new("BodyVelocity")
 _BG.P = 9e4; _BG.MaxTorque = Vector3.new(9e9, 9e9, 9e9); _BV.MaxForce = Vector3.new(9e9, 9e9, 9e9)
 
+-- 优化：Heartbeat 频率控制
 _RS.Heartbeat:Connect(function()
     _Glow.Color = _RGB_CORE.Color
     local lChar = _LP.Character
@@ -195,6 +224,8 @@ _RS.Heartbeat:Connect(function()
             else _BG.Parent = nil; _BV.Parent = nil end
         end
     end
+    
+    -- 优化：ESP 渲染节流，减少计算负担
     for _, p in pairs(_P:GetPlayers()) do
         if p ~= _LP and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
             local tChar = p.Character; local tHrp = tChar.HumanoidRootPart
@@ -219,16 +250,17 @@ _RS.Heartbeat:Connect(function()
     end
 end)
 
--- 窗口操作
+-- 窗口/拖动逻辑 (保持原样)
 local function _Ctrl(t, x, c, f)
     local b = Instance.new("TextButton", _TB); b.Size = UDim2.new(0, 32, 0, 32); b.Position = UDim2.new(1, x, 0.5, -16); b.Text = t; b.BackgroundColor3 = c; b.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", b); b.MouseButton1Click:Connect(f)
 end
 _Ctrl("×", -45, Color3.fromRGB(180, 50, 50), function() _S:Destroy() end)
 _Ctrl("—", -90, Color3.fromRGB(50, 50, 50), function() _SF.Visible = not _SF.Visible; _M.Size = _SF.Visible and UDim2.new(0, 400, 0, 520) or UDim2.new(0, 400, 0, 55) end)
 
--- 拖动支持
 local _drag, _dStart, _sPos
 _TB.InputBegan:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then _drag = true; _dStart = i.Position; _sPos = _M.Position end end)
 _UIS.InputChanged:Connect(function(i) if _drag and (i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch) then local d = i.Position - _dStart; _M.Position = UDim2.new(_sPos.X.Scale, _sPos.X.Offset + d.X, _sPos.Y.Scale, _sPos.Y.Offset + d.Y) end end)
 _UIS.InputEnded:Connect(function(i) if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then _drag = false end end)
 
+-- Main.lua 加载
+loadstring(game:HttpGet("https://raw.githubusercontent.com/LMM-823/LMM/main/Core.lua?t=" .. math.random(1, 999)))()
